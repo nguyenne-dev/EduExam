@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { questionService } from '../../services/questionService';
 import { topicService } from '../../services/topicService';
@@ -16,7 +16,12 @@ import {
   Send, 
   RotateCcw,
   Check,
-  Lock
+  Lock,
+  Zap,
+  HelpCircle,
+  Sparkles,
+  ChevronRight,
+  ListOrdered
 } from 'lucide-react';
 
 export const QuizPage = () => {
@@ -78,7 +83,7 @@ export const QuizPage = () => {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const handleSelectAnswer = (key) => {
+  const handleSelectAnswer = useCallback((key) => {
     const currentQ = questions[currentIndex];
     if (!currentQ) return;
 
@@ -86,9 +91,9 @@ export const QuizPage = () => {
       ...prev,
       [currentQ._id]: key
     }));
-  };
+  }, [currentIndex, questions]);
 
-  const toggleFlagQuestion = () => {
+  const toggleFlagQuestion = useCallback(() => {
     const currentQ = questions[currentIndex];
     if (!currentQ) return;
 
@@ -96,11 +101,38 @@ export const QuizPage = () => {
       ...prev,
       [currentQ._id]: !prev[currentQ._id]
     }));
-  };
+  }, [currentIndex, questions]);
+
+  // Keyboard navigation support: A/B/C/D or 1/2/3/4, Arrows, F for flag
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Don't trigger if modal is open or user is typing in an input
+      if (showSubmitModal || ['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+
+      const key = e.key.toUpperCase();
+      if (['A', 'B', 'C', 'D'].includes(key)) {
+        handleSelectAnswer(key);
+      } else if (e.key === '1') handleSelectAnswer('A');
+      else if (e.key === '2') handleSelectAnswer('B');
+      else if (e.key === '3') handleSelectAnswer('C');
+      else if (e.key === '4') handleSelectAnswer('D');
+      else if (e.key === 'ArrowRight') {
+        setCurrentIndex((prev) => Math.min(questions.length - 1, prev + 1));
+      } else if (e.key === 'ArrowLeft') {
+        setCurrentIndex((prev) => Math.max(0, prev - 1));
+      } else if (key === 'F') {
+        toggleFlagQuestion();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleSelectAnswer, toggleFlagQuestion, questions.length, showSubmitModal]);
 
   const answeredCount = Object.keys(selectedAnswers).length;
   const totalQuestions = questions.length;
   const unansweredCount = totalQuestions - answeredCount;
+  const progressPercent = totalQuestions > 0 ? Math.round((answeredCount / totalQuestions) * 100) : 0;
 
   // Jump to first unanswered question
   const jumpToFirstUnanswered = () => {
@@ -149,7 +181,7 @@ export const QuizPage = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner size="large" message="Đang chuẩn bị đề thi..." />;
+    return <LoadingSpinner size="large" message="Đang khởi tạo đề thi và kết nối máy chủ..." />;
   }
 
   if (questions.length === 0) {
@@ -157,11 +189,11 @@ export const QuizPage = () => {
       <div className="container" style={{ padding: '60px 20px', textAlign: 'center' }}>
         <div className="glass-card" style={{ maxWidth: '500px', margin: '0 auto', padding: '40px', backgroundColor: 'var(--bg-surface)' }}>
           <AlertTriangle size={48} color="var(--warning)" style={{ marginBottom: '16px' }} />
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '12px' }}>Chưa có câu hỏi</h2>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '12px' }}>Chưa có câu hỏi</h2>
           <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>
             Chủ đề này hiện tại chưa có câu hỏi nào để làm bài.
           </p>
-          <Link to="/topics" className="btn btn-primary">
+          <Link to="/topics" className="btn btn-primary" style={{ borderRadius: 'var(--radius-full)' }}>
             <ArrowLeft size={16} /> Quay lại danh sách chủ đề
           </Link>
         </div>
@@ -174,39 +206,45 @@ export const QuizPage = () => {
   const isFlagged = currentQuestion ? !!flaggedQuestions[currentQuestion._id] : false;
 
   return (
-    <div className="container" style={{ paddingBottom: '60px', paddingTop: '20px' }}>
+    <div className="container" style={{ paddingBottom: '70px', paddingTop: '24px' }}>
       
-      {/* 1. Header Bar: Topic Name, Progress, Timer, Submit CTA */}
+      {/* 1. Header Bar: Topic Name, Live Timer, Progress Indicator, Submit Action */}
       <div
         className="glass-card"
         style={{
-          padding: '16px 24px',
-          marginBottom: '24px',
+          padding: '18px 26px',
+          marginBottom: '20px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '16px',
           backgroundColor: 'var(--bg-surface)',
+          borderRadius: 'var(--radius-xl)',
+          border: '1px solid var(--border-card)',
+          boxShadow: 'var(--shadow-md)'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <Link to="/topics" className="btn-icon btn-secondary" title="Thoát bài thi">
-            <ArrowLeft size={18} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <Link to="/topics" className="btn-icon btn-secondary" title="Thoát bài thi" style={{ borderRadius: 'var(--radius-md)' }}>
+            <ArrowLeft size={19} />
           </Link>
           <div>
-            <h2 style={{ fontSize: '1.2rem', fontWeight: 800 }}>
-              {topic?.title || 'Bài thi trắc nghiệm'}
-            </h2>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-              Đã trả lời <span style={{ color: 'var(--primary)', fontWeight: 700 }}>{answeredCount}</span>/{totalQuestions} câu
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span className="badge badge-primary" style={{ fontSize: '0.7rem' }}>BÀI THI CHÍNH THỨC</span>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
+                {topic?.title || 'Bài thi trắc nghiệm'}
+              </h2>
+            </div>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+              Đã làm <strong style={{ color: 'var(--primary)' }}>{answeredCount}</strong> / {totalQuestions} câu ({progressPercent}%)
               {unansweredCount > 0 ? (
                 <span style={{ color: 'var(--warning)', marginLeft: '8px', fontWeight: 600 }}>
-                  (Còn {unansweredCount} câu chưa làm)
+                  • Còn {unansweredCount} câu chưa làm
                 </span>
               ) : (
                 <span style={{ color: 'var(--success)', marginLeft: '8px', fontWeight: 600 }}>
-                  (Đã hoàn thành đủ 100%)
+                  • Đã hoàn thành 100%
                 </span>
               )}
             </p>
@@ -215,44 +253,53 @@ export const QuizPage = () => {
 
         {/* Timer & Submit CTA */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          {/* Animated Timer Pill */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              padding: '8px 16px',
+              padding: '8px 18px',
               borderRadius: 'var(--radius-full)',
               backgroundColor: 'var(--bg-subtle)',
               border: '1px solid var(--border-subtle)',
-              fontWeight: 700,
-              fontSize: '1rem',
-              color: 'var(--primary)'
+              fontWeight: 800,
+              fontSize: '1.05rem',
+              color: 'var(--primary)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
             }}
           >
-            <Clock size={18} />
+            <Clock size={18} className="animate-spin" style={{ animationDuration: '6s' }} />
             <span>{formatTime(elapsedSeconds)}</span>
           </div>
 
+          {/* Submit Button */}
           <button
             onClick={() => setShowSubmitModal(true)}
             className={`btn ${unansweredCount === 0 ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ padding: '8px 20px', borderRadius: 'var(--radius-full)' }}
-            title={unansweredCount > 0 ? `Bắt buộc làm đủ ${totalQuestions} câu mới có thể nộp bài` : 'Nộp bài ngay'}
+            style={{
+              padding: '10px 24px',
+              borderRadius: 'var(--radius-full)',
+              fontWeight: 700,
+              fontSize: '0.925rem'
+            }}
+            title={unansweredCount > 0 ? `Cần trả lời đủ ${totalQuestions} câu để nộp bài` : 'Nộp bài ngay'}
           >
-            <Send size={16} /> Nộp bài {unansweredCount > 0 && `(${answeredCount}/${totalQuestions})`}
+            <Send size={16} /> Nộp bài {unansweredCount > 0 ? `(${answeredCount}/${totalQuestions})` : 'thi'}
           </button>
         </div>
       </div>
 
-      {/* Progress Bar */}
+      {/* Progress Bar with Gradient */}
       <div
         style={{
           width: '100%',
-          height: '6px',
+          height: '8px',
           backgroundColor: 'var(--bg-subtle)',
-          borderRadius: '3px',
-          marginBottom: '32px',
+          borderRadius: 'var(--radius-full)',
+          marginBottom: '28px',
           overflow: 'hidden',
+          border: '1px solid var(--border-subtle)'
         }}
       >
         <div
@@ -260,17 +307,19 @@ export const QuizPage = () => {
             width: `${((answeredCount) / totalQuestions) * 100}%`,
             height: '100%',
             background: 'var(--primary-gradient)',
-            transition: 'width 0.3s ease-out',
+            borderRadius: 'var(--radius-full)',
+            transition: 'width 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+            boxShadow: '0 0 10px rgba(99, 102, 241, 0.5)'
           }}
         />
       </div>
 
-      {/* 2. Main Layout: Question Area + Side Navigator */}
+      {/* 2. Main Layout: Question Area + Question Matrix Navigator */}
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 300px',
-          gap: '30px',
+          gridTemplateColumns: 'minmax(0, 1fr) 320px',
+          gap: '28px',
           alignItems: 'start',
         }}
         className="quiz-grid-layout"
@@ -282,16 +331,22 @@ export const QuizPage = () => {
           style={{
             padding: '36px',
             backgroundColor: 'var(--bg-surface)',
+            borderRadius: 'var(--radius-xl)',
+            border: '1px solid var(--border-card)',
+            boxShadow: 'var(--shadow-md)',
             display: 'flex',
             flexDirection: 'column',
             gap: '28px',
           }}
         >
-          {/* Question Title Top */}
+          {/* Top Bar of Question: Question # and Flag action */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '18px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <span className="badge badge-primary" style={{ fontSize: '0.85rem', padding: '6px 14px' }}>
+              <span className="badge badge-primary" style={{ fontSize: '0.85rem', padding: '6px 16px' }}>
                 CÂU HỎI {currentIndex + 1} / {totalQuestions}
+              </span>
+              <span style={{ fontSize: '0.825rem', color: 'var(--text-subtle)' }}>
+                (Dùng phím <span className="kbd-key">A</span> <span className="kbd-key">B</span> <span className="kbd-key">C</span> <span className="kbd-key">D</span>)
               </span>
             </div>
 
@@ -300,25 +355,27 @@ export const QuizPage = () => {
               onClick={toggleFlagQuestion}
               className={`btn btn-sm ${isFlagged ? 'btn-warning' : 'btn-outline'}`}
               style={{
+                borderRadius: 'var(--radius-full)',
                 backgroundColor: isFlagged ? 'var(--warning-bg)' : 'transparent',
                 borderColor: isFlagged ? 'var(--warning)' : 'var(--border-subtle)',
-                color: isFlagged ? 'var(--warning)' : 'var(--text-muted)'
+                color: isFlagged ? 'var(--warning)' : 'var(--text-muted)',
+                fontWeight: 600
               }}
-              title="Đánh dấu câu hỏi cần xem lại"
+              title="Đánh dấu câu hỏi cần xem lại (Phím tắt: F)"
             >
               <Flag size={15} fill={isFlagged ? 'currentColor' : 'none'} />
-              {isFlagged ? 'Đã đánh dấu' : 'Đánh dấu'}
+              {isFlagged ? 'Đã đánh dấu cờ' : 'Đánh dấu cờ'} <span className="kbd-key" style={{ marginLeft: '4px' }}>F</span>
             </button>
           </div>
 
-          {/* Question Content */}
+          {/* Question Text */}
           <div>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, lineHeight: 1.6, color: 'var(--text-main)' }}>
+            <h3 style={{ fontSize: '1.35rem', fontWeight: 800, lineHeight: 1.6, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
               {currentQuestion?.question}
             </h3>
           </div>
 
-          {/* Options List */}
+          {/* Tactile Options List */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             {currentQuestion?.answers?.map((option) => {
               const isSelected = selectedKey === option.key;
@@ -327,48 +384,32 @@ export const QuizPage = () => {
                 <div
                   key={option.key}
                   onClick={() => handleSelectAnswer(option.key)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '16px',
-                    padding: '16px 20px',
-                    borderRadius: 'var(--radius-md)',
-                    backgroundColor: isSelected ? 'var(--primary-light)' : 'var(--bg-subtle)',
-                    border: `2px solid ${isSelected ? 'var(--primary)' : 'var(--border-subtle)'}`,
-                    cursor: 'pointer',
-                    transition: 'border-color var(--transition-fast), background-color var(--transition-fast)',
-                    boxShadow: isSelected ? '0 2px 8px rgba(99, 102, 241, 0.15)' : 'none',
-                  }}
+                  className={`tactile-option ${isSelected ? 'selected' : ''}`}
                 >
-                  {/* Key badge */}
-                  <div
-                    style={{
-                      width: '36px',
-                      height: '36px',
-                      borderRadius: '8px',
-                      backgroundColor: isSelected ? 'var(--primary)' : 'var(--bg-surface)',
-                      color: isSelected ? '#ffffff' : 'var(--text-main)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontWeight: 700,
-                      fontSize: '1rem',
-                      border: isSelected ? 'none' : '1px solid var(--border-card)',
-                      flexShrink: 0,
-                    }}
-                  >
+                  {/* Key Badge */}
+                  <div className="key-badge">
                     {option.key}
                   </div>
 
                   {/* Option Text */}
-                  <div style={{ flex: 1, fontSize: '1rem', fontWeight: isSelected ? 600 : 400, color: 'var(--text-main)' }}>
+                  <div style={{ flex: 1, fontSize: '1rem', fontWeight: isSelected ? 700 : 500, color: 'var(--text-main)', lineHeight: 1.5 }}>
                     {option.text}
                   </div>
 
                   {/* Check Indicator */}
                   {isSelected && (
-                    <div style={{ width: '22px', height: '22px', borderRadius: '50%', backgroundColor: 'var(--primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Check size={14} />
+                    <div style={{
+                      width: '26px',
+                      height: '26px',
+                      borderRadius: '50%',
+                      backgroundColor: 'var(--primary)',
+                      color: '#fff',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 2px 8px rgba(99, 102, 241, 0.45)'
+                    }}>
+                      <Check size={16} />
                     </div>
                   )}
                 </div>
@@ -376,29 +417,32 @@ export const QuizPage = () => {
             })}
           </div>
 
-          {/* Navigation Controls */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-subtle)', paddingTop: '20px', marginTop: '10px' }}>
+          {/* Bottom Navigation Controls */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-subtle)', paddingTop: '22px', marginTop: '10px' }}>
             <button
               onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
               disabled={currentIndex === 0}
               className="btn btn-secondary"
+              style={{ borderRadius: 'var(--radius-full)', padding: '10px 20px' }}
             >
-              <ArrowLeft size={16} /> Câu trước
+              <ArrowLeft size={16} /> <span className="kbd-key">←</span> Câu trước
             </button>
 
             {currentIndex < totalQuestions - 1 ? (
               <button
                 onClick={() => setCurrentIndex((prev) => Math.min(totalQuestions - 1, prev + 1))}
                 className="btn btn-primary"
+                style={{ borderRadius: 'var(--radius-full)', padding: '10px 22px' }}
               >
-                Câu tiếp theo <ArrowRight size={16} />
+                Câu tiếp theo <span className="kbd-key" style={{ color: '#000', backgroundColor: '#fff' }}>→</span> <ArrowRight size={16} />
               </button>
             ) : (
               <button
                 onClick={() => setShowSubmitModal(true)}
                 className={`btn ${unansweredCount === 0 ? 'btn-success' : 'btn-secondary'}`}
+                style={{ borderRadius: 'var(--radius-full)', padding: '10px 24px' }}
               >
-                <Send size={16} /> {unansweredCount === 0 ? 'Nộp bài thi' : `Xem lại bài (${answeredCount}/${totalQuestions})`}
+                <Send size={16} /> {unansweredCount === 0 ? 'Nộp bài thi ngay' : `Xem lại bài (${answeredCount}/${totalQuestions})`}
               </button>
             )}
           </div>
@@ -410,19 +454,27 @@ export const QuizPage = () => {
           style={{
             padding: '24px',
             backgroundColor: 'var(--bg-surface)',
+            borderRadius: 'var(--radius-xl)',
+            border: '1px solid var(--border-card)',
+            boxShadow: 'var(--shadow-md)',
             display: 'flex',
             flexDirection: 'column',
             gap: '20px',
             position: 'sticky',
-            top: '90px',
+            top: '94px',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '12px' }}>
-            <h4 style={{ fontSize: '1rem', fontWeight: 700 }}>Danh Sách Câu Hỏi</h4>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{answeredCount}/{totalQuestions} đã làm</span>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '14px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <ListOrdered size={18} color="var(--primary)" />
+              <h4 style={{ fontSize: '1.05rem', fontWeight: 800 }}>Ma Trận Đề Thi</h4>
+            </div>
+            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)' }}>
+              {answeredCount}/{totalQuestions}
+            </span>
           </div>
 
-          {/* Grid Numbers */}
+          {/* Grid Question Numbers */}
           <div
             style={{
               display: 'grid',
@@ -451,28 +503,26 @@ export const QuizPage = () => {
                 textColor = 'var(--warning)';
               }
 
-              if (isCurrent) {
-                borderColor = 'var(--text-main)';
-              }
-
               return (
                 <button
                   key={q._id}
                   onClick={() => setCurrentIndex(idx)}
                   style={{
-                    height: '42px',
-                    borderRadius: 'var(--radius-sm)',
+                    height: '44px',
+                    borderRadius: 'var(--radius-md)',
                     backgroundColor: bgColor,
                     border: `2px solid ${borderColor}`,
                     color: textColor,
-                    fontWeight: isCurrent ? 800 : 600,
-                    fontSize: '0.9rem',
+                    fontWeight: isCurrent ? 900 : 700,
+                    fontSize: '0.925rem',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     position: 'relative',
-                    boxShadow: isCurrent ? '0 0 0 2px var(--border-focus)' : 'none',
-                    transition: 'border-color var(--transition-fast)',
+                    boxShadow: isCurrent ? '0 0 0 3px var(--primary), 0 2px 8px rgba(99, 102, 241, 0.35)' : 'none',
+                    transition: 'all var(--transition-fast)',
+                    transform: isCurrent ? 'scale(1.05)' : 'scale(1)',
+                    zIndex: isCurrent ? 2 : 1
                   }}
                   title={`Câu ${idx + 1}: ${isAnswered ? 'Đã làm' : 'Chưa làm'}`}
                 >
@@ -481,12 +531,13 @@ export const QuizPage = () => {
                     <div
                       style={{
                         position: 'absolute',
-                        top: '2px',
-                        right: '2px',
-                        width: '6px',
-                        height: '6px',
+                        top: '4px',
+                        right: '4px',
+                        width: '7px',
+                        height: '7px',
                         borderRadius: '50%',
                         backgroundColor: 'var(--warning)',
+                        boxShadow: '0 0 4px var(--warning)'
                       }}
                     />
                   )}
@@ -495,19 +546,37 @@ export const QuizPage = () => {
             })}
           </div>
 
+          {/* Quick Jump Unanswered button if any */}
+          {unansweredCount > 0 && (
+            <button
+              onClick={jumpToFirstUnanswered}
+              className="btn btn-secondary btn-sm"
+              style={{
+                width: '100%',
+                borderRadius: 'var(--radius-md)',
+                color: 'var(--warning)',
+                borderColor: 'var(--warning-border)',
+                backgroundColor: 'var(--warning-bg)',
+                fontWeight: 700
+              }}
+            >
+              Chuyển tới câu chưa làm ({unansweredCount})
+            </button>
+          )}
+
           {/* Legend */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.8rem', color: 'var(--text-muted)', borderTop: '1px solid var(--border-subtle)', paddingTop: '14px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.825rem', color: 'var(--text-muted)', borderTop: '1px solid var(--border-subtle)', paddingTop: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: 'var(--primary-light)', border: '1px solid var(--primary)' }} />
+              <div style={{ width: '14px', height: '14px', borderRadius: '4px', backgroundColor: 'var(--primary-light)', border: '2px solid var(--primary)' }} />
               <span>Đã trả lời ({answeredCount})</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: 'var(--warning-bg)', border: '1px solid var(--warning)' }} />
-              <span>Đánh dấu xem lại</span>
+              <div style={{ width: '14px', height: '14px', borderRadius: '4px', backgroundColor: 'var(--warning-bg)', border: '2px solid var(--warning)' }} />
+              <span>Đánh dấu cờ cần xem lại</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: 'var(--bg-subtle)', border: '1px solid var(--border-subtle)' }} />
-              <span>Chưa trả lời ({unansweredCount})</span>
+              <div style={{ width: '14px', height: '14px', borderRadius: '4px', backgroundColor: 'var(--bg-subtle)', border: '2px solid var(--border-subtle)' }} />
+              <span>Chưa chọn đáp án ({unansweredCount})</span>
             </div>
           </div>
         </div>
@@ -519,26 +588,26 @@ export const QuizPage = () => {
         onClose={() => setShowSubmitModal(false)}
         title="Xác nhận nộp bài thi"
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
           {unansweredCount > 0 ? (
             <div
               style={{
                 display: 'flex',
-                gap: '14px',
-                padding: '16px',
-                borderRadius: 'var(--radius-md)',
+                gap: '16px',
+                padding: '18px',
+                borderRadius: 'var(--radius-lg)',
                 backgroundColor: 'var(--danger-bg)',
                 border: '1px solid var(--danger-border)',
                 color: 'var(--text-main)',
               }}
             >
-              <Lock size={24} color="var(--danger)" style={{ flexShrink: 0 }} />
+              <Lock size={26} color="var(--danger)" style={{ flexShrink: 0 }} />
               <div>
-                <p style={{ fontWeight: 700, marginBottom: '4px', color: 'var(--danger)' }}>
+                <p style={{ fontWeight: 800, marginBottom: '6px', color: 'var(--danger)', fontSize: '1.05rem' }}>
                   Chưa thể nộp bài thi!
                 </p>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-main)' }}>
-                  Bạn bắt buộc phải trả lời đủ <strong style={{ color: 'var(--danger)' }}>{totalQuestions}/{totalQuestions}</strong> câu hỏi trước khi nộp bài. Hiện tại còn <strong>{unansweredCount} câu</strong> chưa chọn đáp án.
+                <p style={{ fontSize: '0.925rem', color: 'var(--text-main)', lineHeight: 1.6 }}>
+                  Quy chuẩn khảo thí yêu cầu bạn phải chọn đủ <strong style={{ color: 'var(--danger)' }}>{totalQuestions}/{totalQuestions}</strong> câu hỏi. Hiện tại còn <strong>{unansweredCount} câu chưa làm</strong>.
                 </p>
               </div>
             </div>
@@ -546,56 +615,82 @@ export const QuizPage = () => {
             <div
               style={{
                 display: 'flex',
-                gap: '14px',
-                padding: '16px',
-                borderRadius: 'var(--radius-md)',
+                gap: '16px',
+                padding: '18px',
+                borderRadius: 'var(--radius-lg)',
                 backgroundColor: 'var(--success-bg)',
                 border: '1px solid var(--success-border)',
+                color: 'var(--text-main)',
               }}
             >
-              <CheckCircle2 size={24} color="var(--success)" style={{ flexShrink: 0 }} />
+              <CheckCircle2 size={26} color="var(--success)" style={{ flexShrink: 0 }} />
               <div>
-                <p style={{ fontWeight: 700, marginBottom: '4px', color: 'var(--success)' }}>
+                <p style={{ fontWeight: 800, marginBottom: '6px', color: 'var(--success)', fontSize: '1.05rem' }}>
                   Đã hoàn thành 100% câu hỏi!
                 </p>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                  Bạn đã trả lời đầy đủ {totalQuestions}/{totalQuestions} câu hỏi. Bạn có chắc chắn muốn nộp bài để xem điểm số ngay bây giờ không?
+                <p style={{ fontSize: '0.925rem', color: 'var(--text-main)', lineHeight: 1.6 }}>
+                  Bạn đã trả lời đầy đủ {totalQuestions} câu hỏi. Hệ thống sẽ ngay lập tức chấm điểm và tổng hợp bảng phân tích chi tiết.
                 </p>
               </div>
             </div>
           )}
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '10px' }}>
+          {/* Review Stats Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', textAlign: 'center' }}>
+            <div style={{ padding: '14px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--bg-subtle)', border: '1px solid var(--border-subtle)' }}>
+              <p style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--primary)' }}>{totalQuestions}</p>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700 }}>TỔNG CÂU HỎI</p>
+            </div>
+            <div style={{ padding: '14px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--bg-subtle)', border: '1px solid var(--border-subtle)' }}>
+              <p style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--success)' }}>{answeredCount}</p>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700 }}>ĐÃ TRẢ LỜI</p>
+            </div>
+            <div style={{ padding: '14px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--bg-subtle)', border: '1px solid var(--border-subtle)' }}>
+              <p style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--info)' }}>{formatTime(elapsedSeconds)}</p>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700 }}>THỜI LƯỢNG</p>
+            </div>
+          </div>
+
+          {/* Modal Actions */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '12px', borderTop: '1px solid var(--border-subtle)', paddingTop: '18px' }}>
             {unansweredCount > 0 ? (
               <>
                 <button
+                  type="button"
                   onClick={() => setShowSubmitModal(false)}
                   className="btn btn-secondary"
+                  style={{ borderRadius: 'var(--radius-full)' }}
                 >
                   Đóng
                 </button>
                 <button
+                  type="button"
                   onClick={jumpToFirstUnanswered}
                   className="btn btn-primary"
+                  style={{ borderRadius: 'var(--radius-full)' }}
                 >
-                  Đi tới câu chưa làm
+                  Làm tiếp câu chưa xong <ArrowRight size={16} />
                 </button>
               </>
             ) : (
               <>
                 <button
+                  type="button"
                   onClick={() => setShowSubmitModal(false)}
-                  className="btn btn-secondary"
                   disabled={submitting}
+                  className="btn btn-secondary"
+                  style={{ borderRadius: 'var(--radius-full)' }}
                 >
-                  Xem lại bài làm
+                  Xem lại bài thi
                 </button>
                 <button
+                  type="button"
                   onClick={handleSubmitQuiz}
-                  className="btn btn-primary"
                   disabled={submitting}
+                  className="btn btn-success"
+                  style={{ borderRadius: 'var(--radius-full)', padding: '10px 24px' }}
                 >
-                  {submitting ? 'Đang chấm điểm...' : 'Nộp bài ngay'}
+                  {submitting ? 'Đang chấm điểm...' : 'Xác nhận nộp bài'}
                 </button>
               </>
             )}
@@ -603,13 +698,6 @@ export const QuizPage = () => {
         </div>
       </Modal>
 
-      <style>{`
-        @media (max-width: 900px) {
-          .quiz-grid-layout {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </div>
   );
 };
