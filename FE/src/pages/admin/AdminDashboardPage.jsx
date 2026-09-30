@@ -16,7 +16,11 @@ import {
   Activity,
   Award,
   CheckCircle2,
-  Clock
+  Clock,
+  Sparkles,
+  BarChart3,
+  Flame,
+  FileSpreadsheet
 } from 'lucide-react';
 
 export const AdminDashboardPage = () => {
@@ -65,129 +69,144 @@ export const AdminDashboardPage = () => {
   }, []);
 
   if (loading) {
-    return <LoadingSpinner size="large" message="Đang tải dữ liệu bảng điều khiển..." />;
+    return <LoadingSpinner size="large" message="Đang kết nối trung tâm quản trị EduExam..." />;
   }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
       
-      {/* Welcome Banner */}
+      {/* Welcome Command Banner */}
       <div
-        className="glass-card"
+        className="bento-card"
         style={{
-          padding: '28px 32px',
-          background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%)',
-          border: '1px solid rgba(99, 102, 241, 0.3)',
+          padding: '32px 36px',
+          background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.18) 0%, rgba(139, 92, 246, 0.18) 50%, rgba(236, 72, 153, 0.12) 100%)',
+          border: '1px solid rgba(99, 102, 241, 0.35)',
+          borderRadius: 'var(--radius-2xl)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           flexWrap: 'wrap',
-          gap: '16px',
+          gap: '20px',
+          boxShadow: 'var(--shadow-glow)'
         }}
       >
         <div>
-          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '6px' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '4px 12px', borderRadius: 'var(--radius-full)', backgroundColor: 'var(--primary-light)', color: 'var(--primary)', fontWeight: 800, fontSize: '0.75rem', marginBottom: '12px', border: '1px solid rgba(99, 102, 241, 0.3)' }}>
+            <Sparkles size={14} /> LIVE COMMAND CENTER
+          </div>
+          <h1 style={{ fontSize: '2.1rem', fontWeight: 900, marginBottom: '6px', letterSpacing: '-0.03em' }}>
             Bảng Điều Khiển Quản Trị
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-            Tổng quan số liệu và quản lý toàn bộ hệ sinh thái khảo thí EduExam Platform.
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', maxWidth: '600px' }}>
+            Giám sát thời gian thực số liệu thí sinh, phân bổ bài thi và quản lý ngân hàng câu hỏi khảo thí toàn hệ thống.
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '12px' }}>
-          <Link to="/admin/submissions" className="btn btn-primary btn-sm">
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+          <Link to="/admin/submissions" className="btn btn-primary" style={{ borderRadius: 'var(--radius-full)' }}>
             <Award size={16} /> Quản lý bài thi
           </Link>
-          <Link to="/admin/questions" className="btn btn-secondary btn-sm">
-            <PlusCircle size={16} /> Thêm câu hỏi
+          <Link to="/admin/questions" className="btn btn-secondary" style={{ borderRadius: 'var(--radius-full)' }}>
+            <PlusCircle size={16} /> Thêm câu hỏi mới
           </Link>
         </div>
       </div>
 
-      {/* 4 Metric Cards */}
+      {/* 4 Metric Bento Cards */}
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
           gap: '20px',
         }}
       >
         {/* Card 1: Topics */}
-        <div className="glass-card" style={{ padding: '24px', backgroundColor: 'var(--bg-surface)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-            <div style={{ padding: '10px', borderRadius: '12px', backgroundColor: 'var(--primary-light)', color: 'var(--primary)' }}>
-              <BookOpen size={22} />
+        <div className="bento-card" style={{ padding: '26px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+            <div style={{ padding: '12px', borderRadius: '14px', backgroundColor: 'var(--primary-light)', color: 'var(--primary)' }}>
+              <BookOpen size={24} />
             </div>
-            <Link to="/admin/topics" style={{ fontSize: '0.85rem', color: 'var(--primary)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Link to="/admin/topics" style={{ fontSize: '0.85rem', color: 'var(--primary)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
               Quản lý <ArrowRight size={14} />
             </Link>
           </div>
-          <h3 style={{ fontSize: '2.2rem', fontWeight: 900, marginBottom: '4px' }}>{stats.topicsCount}</h3>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 600 }}>TỔNG SỐ CHỦ ĐỀ</p>
+          <h3 style={{ fontSize: '2.4rem', fontWeight: 900, marginBottom: '4px', letterSpacing: '-0.03em' }}>{stats.topicsCount}</h3>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700 }}>TỔNG CHỦ ĐỀ THI</p>
         </div>
 
         {/* Card 2: Questions */}
-        <div className="glass-card" style={{ padding: '24px', backgroundColor: 'var(--bg-surface)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-            <div style={{ padding: '10px', borderRadius: '12px', backgroundColor: 'var(--info-bg)', color: 'var(--info)' }}>
-              <HelpCircle size={22} />
+        <div className="bento-card" style={{ padding: '26px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+            <div style={{ padding: '12px', borderRadius: '14px', backgroundColor: 'var(--info-bg)', color: 'var(--info)' }}>
+              <HelpCircle size={24} />
             </div>
-            <Link to="/admin/questions" style={{ fontSize: '0.85rem', color: 'var(--info)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Link to="/admin/questions" style={{ fontSize: '0.85rem', color: 'var(--info)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
               Quản lý <ArrowRight size={14} />
             </Link>
           </div>
-          <h3 style={{ fontSize: '2.2rem', fontWeight: 900, marginBottom: '4px' }}>{stats.questionsCount}</h3>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 600 }}>TỔNG SỐ CÂU HỎI</p>
+          <h3 style={{ fontSize: '2.4rem', fontWeight: 900, marginBottom: '4px', letterSpacing: '-0.03em' }}>{stats.questionsCount}</h3>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700 }}>NGÂN HÀNG CÂU HỎI</p>
         </div>
 
         {/* Card 3: Submissions & Performance */}
-        <div className="glass-card" style={{ padding: '24px', backgroundColor: 'var(--bg-surface)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-            <div style={{ padding: '10px', borderRadius: '12px', backgroundColor: 'rgba(236, 72, 153, 0.15)', color: '#ec4899' }}>
-              <Award size={22} />
+        <div className="bento-card" style={{ padding: '26px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+            <div style={{ padding: '12px', borderRadius: '14px', backgroundColor: 'rgba(236, 72, 153, 0.15)', color: '#ec4899' }}>
+              <Award size={24} />
             </div>
-            <Link to="/admin/submissions" style={{ fontSize: '0.85rem', color: '#ec4899', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Link to="/admin/submissions" style={{ fontSize: '0.85rem', color: '#ec4899', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
               Quản lý <ArrowRight size={14} />
             </Link>
           </div>
-          <h3 style={{ fontSize: '2.2rem', fontWeight: 900, marginBottom: '4px' }}>{stats.submissionsCount}</h3>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 600 }}>LƯỢT LÀM BÀI (ĐTB: {stats.averageScore}%)</p>
+          <h3 style={{ fontSize: '2.4rem', fontWeight: 900, marginBottom: '4px', letterSpacing: '-0.03em' }}>{stats.submissionsCount}</h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700 }}>LƯỢT THI</p>
+            <span className="badge badge-success" style={{ fontSize: '0.7rem', padding: '2px 8px' }}>
+              ĐTB: {stats.averageScore}%
+            </span>
+          </div>
         </div>
 
         {/* Card 4: Users */}
-        <div className="glass-card" style={{ padding: '24px', backgroundColor: 'var(--bg-surface)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-            <div style={{ padding: '10px', borderRadius: '12px', backgroundColor: 'var(--success-bg)', color: 'var(--success)' }}>
-              <Users size={22} />
+        <div className="bento-card" style={{ padding: '26px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+            <div style={{ padding: '12px', borderRadius: '14px', backgroundColor: 'var(--success-bg)', color: 'var(--success)' }}>
+              <Users size={24} />
             </div>
-            <Link to="/admin/users" style={{ fontSize: '0.85rem', color: 'var(--success)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Link to="/admin/users" style={{ fontSize: '0.85rem', color: 'var(--success)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
               Quản lý <ArrowRight size={14} />
             </Link>
           </div>
-          <h3 style={{ fontSize: '2.2rem', fontWeight: 900, marginBottom: '4px' }}>{stats.usersCount}</h3>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 600 }}>TỔNG SỐ NGƯỜI DÙNG</p>
+          <h3 style={{ fontSize: '2.4rem', fontWeight: 900, marginBottom: '4px', letterSpacing: '-0.03em' }}>{stats.usersCount}</h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700 }}>THÍ SINH</p>
+            <span className="badge badge-primary" style={{ fontSize: '0.7rem', padding: '2px 8px' }}>
+              Đạt: {stats.passRate}%
+            </span>
+          </div>
         </div>
       </div>
 
       {/* Grid: Recent Topics & Recent Exam Attempts */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '24px' }}>
         
         {/* Box 1: Recent Topics */}
-        <div className="glass-card" style={{ padding: '24px', backgroundColor: 'var(--bg-surface)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
+        <div className="bento-card" style={{ padding: '28px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Activity size={18} color="var(--primary)" />
-              <h2 style={{ fontSize: '1.15rem', fontWeight: 800 }}>Chủ Đề Gần Đây</h2>
+              <Activity size={20} color="var(--primary)" />
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 800 }}>Chủ Đề Khảo Thí Gần Đây</h2>
             </div>
-            <Link to="/admin/topics" className="btn btn-outline btn-sm">
+            <Link to="/admin/topics" className="btn btn-outline btn-sm" style={{ borderRadius: 'var(--radius-full)' }}>
               Xem tất cả
             </Link>
           </div>
 
           {recentTopics.length === 0 ? (
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Chưa có chủ đề nào.</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Chưa có chủ đề nào được tạo.</p>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {recentTopics.map((t) => (
                 <div
                   key={t._id}
@@ -195,18 +214,28 @@ export const AdminDashboardPage = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '12px 16px',
+                    padding: '14px 18px',
                     borderRadius: 'var(--radius-md)',
                     backgroundColor: 'var(--bg-subtle)',
                     border: '1px solid var(--border-subtle)',
+                    transition: 'all var(--transition-fast)'
                   }}
                 >
-                  <div>
-                    <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '2px' }}>{t.title}</h4>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>{t.description}</p>
+                  <div style={{ maxWidth: '65%' }}>
+                    <p style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {t.title}
+                    </p>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {t.description || 'Chủ đề thi trắc nghiệm'}
+                    </p>
                   </div>
-                  <Link to={`/admin/questions?topicId=${t._id}`} className="btn btn-secondary btn-sm" style={{ padding: '4px 10px', fontSize: '0.8rem' }}>
-                    Câu hỏi
+
+                  <Link
+                    to={`/admin/questions?topicId=${t._id}`}
+                    className="btn btn-secondary btn-sm"
+                    style={{ borderRadius: 'var(--radius-full)', fontSize: '0.8rem' }}
+                  >
+                    Xem câu hỏi
                   </Link>
                 </div>
               ))}
@@ -214,51 +243,75 @@ export const AdminDashboardPage = () => {
           )}
         </div>
 
-        {/* Box 2: Recent Exam Attempts */}
-        <div className="glass-card" style={{ padding: '24px', backgroundColor: 'var(--bg-surface)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
+        {/* Box 2: Recent Attempts */}
+        <div className="bento-card" style={{ padding: '28px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Award size={18} color="#ec4899" />
-              <h2 style={{ fontSize: '1.15rem', fontWeight: 800 }}>Lượt Thi Mới Nhất</h2>
+              <Clock size={20} color="var(--info)" />
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 800 }}>Lượt Nộp Bài Mới Nhất</h2>
             </div>
-            <Link to="/admin/submissions" className="btn btn-outline btn-sm">
-              Quản lý chi tiết
+            <Link to="/admin/submissions" className="btn btn-outline btn-sm" style={{ borderRadius: 'var(--radius-full)' }}>
+              Toàn bộ bài thi
             </Link>
           </div>
 
           {recentSubmissions.length === 0 ? (
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Chưa có lượt thi nào hoàn thành.</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Chưa có lượt thi nào được ghi nhận.</p>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {recentSubmissions.map((sub) => (
-                <div
-                  key={sub._id}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '12px 16px',
-                    borderRadius: 'var(--radius-md)',
-                    backgroundColor: 'var(--bg-subtle)',
-                    border: '1px solid var(--border-subtle)',
-                  }}
-                >
-                  <div>
-                    <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '2px' }}>{sub.candidateName}</h4>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-                      {sub.topicTitle} • {new Date(sub.submittedAt).toLocaleDateString('vi-VN')}
-                    </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {recentSubmissions.map((sub, idx) => {
+                const total = sub.totalQuestions || sub.questions?.length || 1;
+                const score = sub.score || 0;
+                const percent = Math.round((score / total) * 100);
+
+                return (
+                  <div
+                    key={sub._id || idx}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '14px 18px',
+                      borderRadius: 'var(--radius-md)',
+                      backgroundColor: 'var(--bg-subtle)',
+                      border: '1px solid var(--border-subtle)',
+                      transition: 'all var(--transition-fast)'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', maxWidth: '60%' }}>
+                      <div style={{
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '50%',
+                        background: 'var(--primary-gradient)',
+                        color: '#fff',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 800,
+                        fontSize: '0.85rem',
+                        flexShrink: 0
+                      }}>
+                        {sub.user?.fullname ? sub.user.fullname.charAt(0).toUpperCase() : 'U'}
+                      </div>
+                      <div style={{ overflow: 'hidden' }}>
+                        <p style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {sub.user?.fullname || 'Thí sinh'}
+                        </p>
+                        <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {sub.topic?.title || 'Bài thi trắc nghiệm'}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div style={{ textAlign: 'right' }}>
+                      <span className={`badge ${percent >= 70 ? 'badge-success' : percent >= 50 ? 'badge-info' : 'badge-warning'}`}>
+                        {score}/{total} ({percent}%)
+                      </span>
+                    </div>
                   </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <span
-                      className={`badge ${sub.percentage >= 80 ? 'badge-success' : sub.percentage >= 50 ? 'badge-primary' : 'badge-danger'}`}
-                      style={{ fontWeight: 700 }}
-                    >
-                      {sub.score}/{sub.totalQuestions} ({sub.percentage}%)
-                    </span>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -270,4 +323,3 @@ export const AdminDashboardPage = () => {
 };
 
 export default AdminDashboardPage;
-
