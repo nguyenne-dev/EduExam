@@ -5,6 +5,9 @@ import {
   Sparkles, 
   ArrowRight, 
   CheckCircle2, 
+  XCircle,
+  X,
+  RotateCcw,
   Brain, 
   Zap, 
   Trophy, 
@@ -26,8 +29,8 @@ export const HomePage = () => {
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Interactive Hero Micro-Challenge state
-  const [heroSelectedOption, setHeroSelectedOption] = useState('A');
+  // Interactive Hero Micro-Challenge state: starts unselected (null) so user chooses themselves
+  const [heroSelectedOption, setHeroSelectedOption] = useState(null);
   const [heroAnswerRevealed, setHeroAnswerRevealed] = useState(false);
 
   useEffect(() => {
@@ -172,6 +175,38 @@ export const HomePage = () => {
                     { key: 'C', text: 'Hardware Thread Pool', correct: false },
                   ].map((opt) => {
                     const isSelected = heroSelectedOption === opt.key;
+                    const isAnswered = heroSelectedOption !== null;
+                    const isCorrect = isSelected && opt.correct;
+                    const isWrong = isSelected && !opt.correct;
+
+                    let bg = 'var(--bg-surface)';
+                    let border = 'var(--border-subtle)';
+                    let badgeBg = 'var(--bg-subtle)';
+                    let badgeColor = 'var(--text-main)';
+                    let textColor = 'var(--text-main)';
+                    let shadow = 'none';
+
+                    if (isSelected) {
+                      if (isCorrect) {
+                        bg = 'var(--success-bg)';
+                        border = 'var(--success)';
+                        badgeBg = 'var(--success)';
+                        badgeColor = '#ffffff';
+                        textColor = 'var(--success)';
+                        shadow = '0 0 16px rgba(16, 185, 129, 0.25)';
+                      } else {
+                        bg = 'var(--danger-bg)';
+                        border = 'var(--danger)';
+                        badgeBg = 'var(--danger)';
+                        badgeColor = '#ffffff';
+                        textColor = 'var(--danger)';
+                        shadow = '0 0 16px rgba(244, 63, 94, 0.25)';
+                      }
+                    } else if (isAnswered && opt.correct && heroSelectedOption !== 'A') {
+                      // Subtly outline the correct answer when user picked the wrong one
+                      border = 'var(--success-border)';
+                    }
+
                     return (
                       <div
                         key={opt.key}
@@ -182,11 +217,11 @@ export const HomePage = () => {
                           gap: '12px',
                           padding: '12px 16px',
                           borderRadius: 'var(--radius-md)',
-                          backgroundColor: isSelected ? 'var(--primary-light)' : 'var(--bg-surface)',
-                          border: `2px solid ${isSelected ? 'var(--primary)' : 'var(--border-subtle)'}`,
+                          backgroundColor: bg,
+                          border: `2px solid ${border}`,
                           cursor: 'pointer',
                           transition: 'all var(--transition-fast)',
-                          boxShadow: isSelected ? '0 0 16px rgba(99, 102, 241, 0.25)' : 'none',
+                          boxShadow: shadow,
                         }}
                       >
                         <div
@@ -194,8 +229,8 @@ export const HomePage = () => {
                             width: '28px',
                             height: '28px',
                             borderRadius: '8px',
-                            backgroundColor: isSelected ? 'var(--primary)' : 'var(--bg-subtle)',
-                            color: isSelected ? '#ffffff' : 'var(--text-main)',
+                            backgroundColor: badgeBg,
+                            color: badgeColor,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -206,12 +241,17 @@ export const HomePage = () => {
                         >
                           {opt.key}
                         </div>
-                        <span style={{ fontSize: '0.9rem', fontWeight: isSelected ? 700 : 500, flex: 1 }}>
+                        <span style={{ fontSize: '0.9rem', fontWeight: isSelected ? 700 : 500, flex: 1, color: textColor }}>
                           {opt.text}
                         </span>
-                        {isSelected && (
-                          <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: 'var(--primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <Check size={12} />
+                        {isSelected && isCorrect && (
+                          <div style={{ width: '22px', height: '22px', borderRadius: '50%', backgroundColor: 'var(--success)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                            <Check size={13} />
+                          </div>
+                        )}
+                        {isSelected && isWrong && (
+                          <div style={{ width: '22px', height: '22px', borderRadius: '50%', backgroundColor: 'var(--danger)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                            <X size={13} />
                           </div>
                         )}
                       </div>
@@ -219,9 +259,28 @@ export const HomePage = () => {
                   })}
                 </div>
 
-                {heroAnswerRevealed && (
-                  <div style={{ marginTop: '14px', padding: '10px 14px', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--success-bg)', border: '1px solid var(--success-border)', color: 'var(--success)', fontSize: '0.85rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <CheckCircle2 size={16} /> Chính xác! JavaScript sử dụng Event Loop để xử lý bất đồng bộ.
+                {/* Instant Feedback Banner */}
+                {heroAnswerRevealed ? (
+                  heroSelectedOption === 'A' ? (
+                    <div style={{ marginTop: '14px', padding: '10px 14px', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--success-bg)', border: '1px solid var(--success-border)', color: 'var(--success)', fontSize: '0.85rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <CheckCircle2 size={16} /> Chính xác! JavaScript sử dụng Event Loop & Call Stack để xử lý bất đồng bộ.
+                    </div>
+                  ) : (
+                    <div style={{ marginTop: '14px', padding: '10px 14px', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--danger-bg)', border: '1px solid var(--danger-border)', color: 'var(--danger)', fontSize: '0.85rem', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <XCircle size={16} /> Chưa chính xác! Đáp án đúng là A (Event Loop).
+                      </span>
+                      <button
+                        onClick={() => { setHeroSelectedOption(null); setHeroAnswerRevealed(false); }}
+                        style={{ fontSize: '0.78rem', color: 'var(--text-main)', background: 'var(--bg-surface)', padding: '3px 8px', borderRadius: '4px', border: '1px solid var(--border-subtle)', cursor: 'pointer', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                      >
+                        <RotateCcw size={11} /> Thử lại
+                      </button>
+                    </div>
+                  )
+                ) : (
+                  <div style={{ marginTop: '14px', padding: '8px 12px', fontSize: '0.825rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Sparkles size={14} color="var(--primary)" /> Nhấp vào một đáp án để trải nghiệm phản hồi chấm điểm tức thì!
                   </div>
                 )}
               </div>
