@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../components/common/Toast';
-import { Mail, Lock, Eye, EyeOff, LogIn, Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, LogIn, ArrowRight, ShieldCheck } from 'lucide-react';
+import EduExamLogo from '../../components/common/EduExamLogo';
 
 export const LoginPage = () => {
   const { login } = useAuth();
@@ -53,22 +54,8 @@ export const LoginPage = () => {
       >
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <div
-            style={{
-              width: '52px',
-              height: '52px',
-              borderRadius: '16px',
-              background: 'var(--primary-gradient)',
-              color: '#fff',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: '16px',
-              boxShadow: '0 8px 20px rgba(99, 102, 241, 0.45)',
-              border: '1px solid rgba(255, 255, 255, 0.2)'
-            }}
-          >
-            <Sparkles size={26} />
+          <div style={{ display: 'inline-flex', justifyContent: 'center', marginBottom: '16px' }}>
+            <EduExamLogo size={46} showText={false} />
           </div>
           <h1 style={{ fontSize: '2rem', fontWeight: 900, letterSpacing: '-0.03em' }}>Đăng Nhập</h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.925rem', marginTop: '6px' }}>

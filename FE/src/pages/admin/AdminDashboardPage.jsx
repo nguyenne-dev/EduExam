@@ -278,7 +278,7 @@ export const AdminDashboardPage = () => {
                       transition: 'all var(--transition-fast)'
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', maxWidth: '60%' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: 0, paddingRight: '12px' }}>
                       <div style={{
                         width: '36px',
                         height: '36px',
@@ -294,8 +294,11 @@ export const AdminDashboardPage = () => {
                       }}>
                         {sub.user?.fullname ? sub.user.fullname.charAt(0).toUpperCase() : 'U'}
                       </div>
-                      <div style={{ overflow: 'hidden' }}>
-                        <p style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      <div style={{ overflow: 'hidden', minWidth: 0 }}>
+                        <p
+                          title={sub.user?.fullname}
+                          style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                        >
                           {sub.user?.fullname || 'Thí sinh'}
                         </p>
                         <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>

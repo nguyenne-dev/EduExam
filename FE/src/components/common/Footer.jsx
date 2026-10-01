@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Heart, Github, Mail, Globe, ArrowRight, ShieldCheck, Zap, Award } from 'lucide-react';
+import { Heart, Github, Mail, Globe, ArrowRight, ShieldCheck, Zap, Award } from 'lucide-react';
+import EduExamLogo from './EduExamLogo';
 
 export const Footer = () => {
   return (
@@ -40,23 +41,8 @@ export const Footer = () => {
         >
           {/* Brand Col */}
           <div style={{ maxWidth: '340px' }}>
-            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-              <div style={{
-                width: '38px',
-                height: '38px',
-                borderRadius: '12px',
-                background: 'var(--primary-gradient)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 4px 12px rgba(99, 102, 241, 0.35)',
-                border: '1px solid rgba(255, 255, 255, 0.2)'
-              }}>
-                <Sparkles size={19} color="#ffffff" />
-              </div>
-              <span style={{ fontSize: '1.35rem', fontWeight: 900, letterSpacing: '-0.03em' }}>
-                Edu<span className="gradient-text">Exam</span>
-              </span>
+            <Link to="/" style={{ display: 'inline-flex', marginBottom: '18px' }}>
+              <EduExamLogo size={40} showText={true} />
             </Link>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.925rem', lineHeight: '1.7', marginBottom: '20px' }}>
               Nền tảng khảo thí và đánh giá năng lực trắc nghiệm trực tuyến chuẩn EdTech 2026. Tốc độ tức thì, giao diện tương tác cao và phân tích điểm số chuyên sâu.

@@ -15,6 +15,7 @@ import {
   ArrowRight,
   Send
 } from 'lucide-react';
+import EduExamLogo from '../../components/common/EduExamLogo';
 
 export const RegisterPage = () => {
   const { addToast } = useToast();
@@ -115,21 +116,8 @@ export const RegisterPage = () => {
           <>
             {/* Header */}
             <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-              <div
-                style={{
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: '14px',
-                  background: 'var(--primary-gradient)',
-                  color: '#fff',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: '14px',
-                  boxShadow: '0 4px 15px rgba(99, 102, 241, 0.35)'
-                }}
-              >
-                <Sparkles size={24} />
+              <div style={{ display: 'inline-flex', justifyContent: 'center', marginBottom: '14px' }}>
+                <EduExamLogo size={46} showText={false} />
               </div>
               <h1 style={{ fontSize: '1.8rem', fontWeight: 800 }}>Tạo Tài Khoản</h1>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '4px' }}>

@@ -17,6 +17,8 @@ import {
   Sparkles,
   Award
 } from 'lucide-react';
+import EduExamLogo from '../components/common/EduExamLogo';
+import ThemeToggle from '../components/common/ThemeToggle';
 
 export const AdminLayout = () => {
   const { user, logout } = useAuth();
@@ -65,23 +67,9 @@ export const AdminLayout = () => {
       >
         <div>
           {/* Brand Logo */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px', paddingLeft: '8px' }}>
-            <Link to="/admin" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '10px',
-                background: 'var(--primary-gradient)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 4px 12px rgba(99, 102, 241, 0.4)'
-              }}>
-                <ShieldCheck size={20} color="#ffffff" />
-              </div>
-              <span style={{ fontSize: '1.25rem', fontWeight: 800 }}>
-                Admin<span className="gradient-text">Panel</span>
-              </span>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px', paddingLeft: '4px' }}>
+            <Link to="/admin" style={{ display: 'inline-flex' }}>
+              <EduExamLogo size={36} showText={true} />
             </Link>
 
             <button
@@ -184,14 +172,7 @@ export const AdminLayout = () => {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <button
-              onClick={toggleTheme}
-              className="btn-icon btn-secondary"
-              title="Chuyển theme"
-              style={{ width: '38px', height: '38px' }}
-            >
-              {isDark ? <Sun size={16} color="#fbbf24" /> : <Moon size={16} color="#6366f1" />}
-            </button>
+            <ThemeToggle size="sm" />
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <div

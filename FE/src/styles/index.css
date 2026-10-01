@@ -3,6 +3,15 @@
    Signature Aesthetic: Linear Deep Space Dark / Porcelain Light + Bento Grid + Luminous Hover (Zero Bounce)
    ========================================================================== */
 
+/* Prevent Theme Flash & Transitions on Initial Page Load */
+.preload,
+.preload *,
+.preload *::before,
+.preload *::after {
+  transition: none !important;
+  animation-duration: 0s !important;
+}
+
 :root {
   /* Fonts */
   --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -628,52 +637,194 @@ img, svg {
 }
 
 /* ==========================================================================
-   Responsive Navbar Rules (Zero Multi-line Wrapping)
+   Responsive Navbar Rules (Exact User-Defined Hierarchy)
    ========================================================================== */
-.mobile-menu-btn {
+.mobile-center-hub {
   display: none;
 }
 
-/* When screen shrinks <= 960px: Hide desktop links and show hamburger toggle */
-@media (max-width: 960px) {
-  .desktop-nav {
+.nav-logo-theme-toggle {
+  display: none;
+}
+
+/* Ensure nav user button and text never clip top/bottom accents */
+.nav-user-btn {
+  overflow: visible !important;
+}
+
+.nav-user-name {
+  line-height: 1.6 !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+
+/* 1. Dưới 1024px (từ 769px đến 1024px):
+   - Text Logo và Text Tên người dùng đều hiển thị đầy đủ
+   - Nav links: Chuyển sang Icon dock (icon to 19px, cách nhau xa hơn với gap: 10px, padding: 8px 11px)
+   - Chế độ sáng tối: Hiển thị ở topbar
+   - Avatar + Full tên + Mũi tên chevron hiển thị */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .nav-logo-text {
+    display: flex !important;
+  }
+  .nav-logo-theme-toggle {
     display: none !important;
   }
-  .mobile-menu-btn {
+  .desktop-nav {
+    gap: 10px !important;
+  }
+  .desktop-nav .nav-link-item {
+    padding: 8px 11px !important;
+    gap: 0 !important;
+  }
+  .desktop-nav .nav-link-text {
+    display: none !important;
+  }
+  .nav-user-name {
+    display: inline-block !important;
+    max-width: 200px;
+  }
+  .nav-user-chevron {
+    display: inline-block !important;
+  }
+  .nav-theme-toggle {
     display: inline-flex !important;
   }
-  .nav-admin-text {
-    display: none;
-  }
-  .nav-admin-badge {
-    padding: 6px 10px !important;
+  .mobile-center-hub {
+    display: none !important;
   }
 }
 
-/* When screen shrinks <= 768px: Hide logo subtitle & navbar theme toggle (moved to drawer) */
-@media (max-width: 768px) {
-  .nav-logo-subtitle {
+/* 2. Dưới 768px (từ 601px đến 768px):
+   "768 ân đi tên chỉ hiên thị avatar"
+   "sau dưới 600 mới ẩn tên brand"
+   - Text Logo: VẪN HIỂN THỊ ĐẦY ĐỦ (dưới 600 mới ẩn tên brand)
+   - Text Tên: ẨN ĐI, CHỈ HIỂN THỊ AVATAR (kèm mũi tên chevron)
+   - Nav links: Icon to cách nhau xa thoáng đãng (gap: 10px)
+   - Chế độ sáng tối: Hiển thị trên topbar */
+@media (min-width: 601px) and (max-width: 768px) {
+  .nav-logo-text {
+    display: flex !important;
+  }
+  .nav-logo-theme-toggle {
+    display: none !important;
+  }
+  .desktop-nav {
+    gap: 10px !important;
+  }
+  .desktop-nav .nav-link-item {
+    padding: 8px 11px !important;
+    gap: 0 !important;
+  }
+  .desktop-nav .nav-link-text {
+    display: none !important;
+  }
+  .nav-admin-text {
+    display: none !important;
+  }
+  .nav-theme-toggle {
+    display: inline-flex !important;
+  }
+  .nav-user-name {
+    display: none !important;
+  }
+  .nav-user-chevron {
+    display: inline-block !important;
+  }
+  .nav-user-btn {
+    padding: 3px 8px 3px 3px !important;
+    border-radius: var(--radius-full) !important;
+    gap: 4px !important;
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border-card) !important;
+  }
+  .mobile-center-hub {
+    display: none !important;
+  }
+}
+
+/* 3. Dưới 600px (từ 401px đến 600px):
+   "sau dưới 600 mới ẩn tên brand"
+   - Text Logo: BÂY GIỜ MỚI ẨN TÊN BRAND (chỉ còn emblem)
+   - User: Chỉ hiển thị avatar (kèm mũi tên chevron)
+   - Nav links: Icon dock cách nhau thoáng đãng (gap: 8px)
+   - Chế độ sáng tối: Hiển thị trên topbar
+   - Hub: Chưa hiện! */
+@media (min-width: 401px) and (max-width: 600px) {
+  .nav-logo-text {
+    display: none !important;
+  }
+  .nav-logo-theme-toggle {
+    display: none !important;
+  }
+  .desktop-nav {
+    display: flex !important;
+    gap: 8px !important;
+  }
+  .desktop-nav .nav-link-item {
+    padding: 7px 10px !important;
+    gap: 0 !important;
+  }
+  .desktop-nav .nav-link-text {
+    display: none !important;
+  }
+  .nav-theme-toggle {
+    display: inline-flex !important;
+  }
+  .nav-user-name {
+    display: none !important;
+  }
+  .nav-user-chevron {
+    display: inline-block !important;
+  }
+  .nav-user-btn {
+    padding: 3px 8px 3px 3px !important;
+    border-radius: var(--radius-full) !important;
+    gap: 4px !important;
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border-card) !important;
+  }
+  .mobile-center-hub {
+    display: none !important;
+  }
+}
+
+/* 4. Dưới 400px (<= 400px):
+   "Dưới 400 bao nhiêu đó hay 400 thì mới cho hub ra chính giữa màn"
+   - Đóng icon nav ngang
+   - Cho hub ra CHÍNH GIỮA màn hình (giữa Logo và Avatar)
+   - Trái: Logo Emblem, Giữa: Menu Hub, Phải: Avatar kèm mũi tên */
+@media (max-width: 400px) {
+  .desktop-nav {
+    display: none !important;
+  }
+  .mobile-center-hub {
+    display: flex !important;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+  }
+  .nav-logo-text {
+    display: none !important;
+  }
+  .nav-logo-theme-toggle {
     display: none !important;
   }
   .nav-theme-toggle {
     display: none !important;
   }
-}
-
-/* When screen shrinks <= 640px: Hide user text, show circular avatar only */
-@media (max-width: 640px) {
   .nav-user-name {
     display: none !important;
   }
-  .nav-user-btn {
-    padding: 4px 6px !important;
-    gap: 4px !important;
+  .nav-user-chevron {
+    display: inline-block !important;
   }
-}
-
-/* When screen shrinks <= 480px: Show brand emblem only to keep 100% single line */
-@media (max-width: 480px) {
-  .nav-logo-text {
-    display: none !important;
+  .nav-user-btn {
+    padding: 3px 8px 3px 3px !important;
+    border-radius: var(--radius-full) !important;
+    gap: 4px !important;
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border-card) !important;
   }
 }

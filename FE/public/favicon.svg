@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <defs>
+    <linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="50%" stop-color="#7c3aed" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+  </defs>
+
+  <!-- Squircle Emblem Background -->
+  <rect width="32" height="32" rx="9" fill="url(#brandGrad)" />
+  <rect width="32" height="32" rx="9" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1" />
+
+  <!-- Top Dynamic Bar -->
+  <path
+    d="M7 8C7 7.45 7.45 7 8 7H23C23.68 7 24.11 7.68 23.84 8.31L21.7 13.31C21.53 13.72 21.14 14 20.7 14H12C11.45 14 11 13.55 11 13V8"
+    fill="#ffffff"
+    fill-opacity="0.96"
+  />
+
+  <!-- Center Stem of 'E' -->
+  <rect x="7" y="14" width="12" height="4" rx="2" fill="#ffffff" fill-opacity="0.92" />
+
+  <!-- Bottom Foundation -->
+  <path
+    d="M11 19C11 18.45 11.45 18 12 18H22C22.92 18 23.52 18.92 23.18 19.77L20.78 25.77C20.54 26.38 19.95 26.78 19.3 26.78H8C7.45 26.78 7 26.33 7 25.78V19"
+    fill="#ffffff"
+    fill-opacity="0.96"
+  />
+</svg>
