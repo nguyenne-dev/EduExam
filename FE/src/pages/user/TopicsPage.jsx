@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { topicService } from '../../services/topicService';
-import { Search, BookOpen, ArrowRight, Sparkles, Filter } from 'lucide-react';
+import { Search, BookOpen, ArrowRight, Sparkles, Filter, Zap, Award } from 'lucide-react';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 export const TopicsPage = () => {
@@ -30,38 +30,38 @@ export const TopicsPage = () => {
   });
 
   return (
-    <div className="container" style={{ paddingBottom: '60px' }}>
+    <div className="container" style={{ paddingBottom: '70px', paddingTop: '20px' }}>
       
       {/* Header Banner */}
-      <div style={{ textAlign: 'center', maxWidth: '640px', margin: '30px auto 40px' }}>
-        <span className="badge badge-primary" style={{ marginBottom: '12px' }}>
-          <Sparkles size={14} /> TẤT CẢ CHỦ ĐỀ
+      <div style={{ textAlign: 'center', maxWidth: '680px', margin: '30px auto 44px' }}>
+        <span className="badge badge-primary" style={{ marginBottom: '12px', padding: '6px 16px' }}>
+          <Sparkles size={14} /> NGÂN HÀNG KHẢO THÍ CHỌN LỌC
         </span>
-        <h1 style={{ fontSize: '2.4rem', fontWeight: 800, marginBottom: '12px' }}>
+        <h1 style={{ fontSize: 'clamp(2.2rem, 4vw, 3rem)', fontWeight: 900, marginBottom: '14px', letterSpacing: '-0.03em' }}>
           Khám Phá Các <span className="gradient-text">Bộ Đề Thi Trắc Nghiệm</span>
         </h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', lineHeight: 1.6 }}>
-          Chọn chủ đề bạn quan tâm và thử thách kiến thức bản thân ngay bây giờ.
+        <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', lineHeight: 1.7 }}>
+          Lựa chọn chủ đề bạn quan tâm, thử thách độ nhạy bén và nhận báo cáo phân tích điểm số chuẩn xác tức thì.
         </p>
 
         {/* Search Bar */}
-        <div style={{ position: 'relative', marginTop: '28px' }}>
+        <div style={{ position: 'relative', marginTop: '32px' }}>
           <Search
             size={20}
             color="var(--text-subtle)"
-            style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)' }}
+            style={{ position: 'absolute', left: '18px', top: '50%', transform: 'translateY(-50%)' }}
           />
           <input
             type="text"
             className="form-input"
-            placeholder="Tìm kiếm chủ đề theo tên hoặc mô tả..."
+            placeholder="Tìm kiếm chủ đề theo tên hoặc nội dung..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             style={{
-              paddingLeft: '48px',
+              paddingLeft: '50px',
               paddingRight: '20px',
               height: '52px',
-              borderRadius: 'var(--radius-lg)',
+              borderRadius: 'var(--radius-full)',
               fontSize: '1rem',
               boxShadow: 'var(--shadow-md)',
               backgroundColor: 'var(--bg-surface)'
@@ -72,15 +72,15 @@ export const TopicsPage = () => {
 
       {/* Topics Grid */}
       {loading ? (
-        <LoadingSpinner message="Đang tải danh sách chủ đề..." />
+        <LoadingSpinner message="Đang tải danh sách chủ đề khảo thí..." />
       ) : filteredTopics.length === 0 ? (
         <div
-          className="glass-card"
+          className="bento-card"
           style={{
             padding: '60px 20px',
             textAlign: 'center',
             backgroundColor: 'var(--bg-surface)',
-            maxWidth: '500px',
+            maxWidth: '520px',
             margin: '0 auto',
           }}
         >
@@ -97,15 +97,17 @@ export const TopicsPage = () => {
           }}>
             <Filter size={28} />
           </div>
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '8px' }}>Không tìm thấy chủ đề phù hợp</h3>
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '8px' }}>Không tìm thấy chủ đề phù hợp</h3>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '20px' }}>
-            {searchQuery ? `Không có kết quả nào khớp với "${searchQuery}"` : 'Hiện chưa có chủ đề nào trên hệ thống.'}
+            Không có kết quả nào khớp với từ khóa "{searchQuery}". Vui lòng thử từ khóa khác.
           </p>
-          {searchQuery && (
-            <button onClick={() => setSearchQuery('')} className="btn btn-secondary btn-sm">
-              Xóa tìm kiếm
-            </button>
-          )}
+          <button
+            onClick={() => setSearchQuery('')}
+            className="btn btn-secondary btn-sm"
+            style={{ borderRadius: 'var(--radius-full)' }}
+          >
+            Xóa tìm kiếm
+          </button>
         </div>
       ) : (
         <div
@@ -118,14 +120,13 @@ export const TopicsPage = () => {
           {filteredTopics.map((topic, index) => (
             <div
               key={topic._id}
-              className="glass-card"
+              className="bento-card"
               style={{
-                padding: '28px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                gap: '24px',
-                backgroundColor: 'var(--bg-surface)',
+                gap: '22px',
+                backgroundColor: 'var(--bg-surface)'
               }}
             >
               <div>
@@ -134,35 +135,31 @@ export const TopicsPage = () => {
                     width: '46px',
                     height: '46px',
                     borderRadius: '14px',
-                    background: index % 3 === 0 
-                      ? 'var(--primary-gradient)' 
-                      : index % 3 === 1 
-                      ? 'var(--accent-gradient)' 
-                      : 'var(--warm-gradient)',
+                    background: index % 2 === 0 ? 'var(--primary-gradient)' : 'var(--accent-gradient)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     color: '#fff',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                    boxShadow: '0 6px 14px rgba(0,0,0,0.15)'
                   }}>
                     <BookOpen size={22} />
                   </div>
                   <span className="badge badge-primary">TRẮC NGHIỆM</span>
                 </div>
 
-                <h3 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '10px' }}>
+                <h3 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '10px' }}>
                   {topic.title}
                 </h3>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', lineHeight: 1.6 }}>
-                  {topic.description || 'Chủ đề ôn luyện kiến thức trắc nghiệm chất lượng cao.'}
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  {topic.description || 'Bộ đề thi kiểm tra năng lực và củng cố kiến thức toàn diện.'}
                 </p>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-subtle)', paddingTop: '18px' }}>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-subtle)', fontWeight: 600 }}>
-                  Miễn phí tham gia
+                <span style={{ fontSize: '0.825rem', color: 'var(--text-subtle)', fontWeight: 600 }}>
+                  Chấm điểm tức thì
                 </span>
-                <Link to={`/quiz/${topic._id}`} className="btn btn-primary btn-sm">
+                <Link to={`/quiz/${topic._id}`} className="btn btn-primary btn-sm" style={{ borderRadius: 'var(--radius-full)' }}>
                   Bắt đầu làm bài <ArrowRight size={14} />
                 </Link>
               </div>
@@ -170,6 +167,7 @@ export const TopicsPage = () => {
           ))}
         </div>
       )}
+
     </div>
   );
 };

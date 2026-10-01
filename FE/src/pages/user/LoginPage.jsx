@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../components/common/Toast';
-import { Mail, Lock, Eye, EyeOff, LogIn, Sparkles, ArrowRight } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, LogIn, Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export const LoginPage = () => {
   const { login } = useAuth();
@@ -39,36 +39,39 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="container" style={{ minHeight: 'calc(100vh - 200px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px' }}>
+    <div className="container" style={{ minHeight: 'calc(100vh - 180px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '50px 20px' }}>
       <div
-        className="glass-card animate-fade-in"
+        className="bento-card animate-fade-in"
         style={{
           width: '100%',
           maxWidth: '460px',
-          padding: '40px 36px',
+          padding: '44px 38px',
           backgroundColor: 'var(--bg-surface)',
+          borderRadius: 'var(--radius-2xl)',
+          boxShadow: 'var(--shadow-lg), var(--shadow-glow)'
         }}
       >
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div
             style={{
-              width: '48px',
-              height: '48px',
-              borderRadius: '14px',
+              width: '52px',
+              height: '52px',
+              borderRadius: '16px',
               background: 'var(--primary-gradient)',
               color: '#fff',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
               marginBottom: '16px',
-              boxShadow: '0 4px 15px rgba(99, 102, 241, 0.35)'
+              boxShadow: '0 8px 20px rgba(99, 102, 241, 0.45)',
+              border: '1px solid rgba(255, 255, 255, 0.2)'
             }}
           >
-            <Sparkles size={24} />
+            <Sparkles size={26} />
           </div>
-          <h1 style={{ fontSize: '1.8rem', fontWeight: 800 }}>Đăng Nhập</h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '6px' }}>
+          <h1 style={{ fontSize: '2rem', fontWeight: 900, letterSpacing: '-0.03em' }}>Đăng Nhập</h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.925rem', marginTop: '6px' }}>
             Chào mừng trở lại! Vui lòng nhập thông tin tài khoản của bạn.
           </p>
         </div>
@@ -98,7 +101,7 @@ export const LoginPage = () => {
               </label>
               <Link
                 to="/forgot-password"
-                style={{ fontSize: '0.82rem', color: 'var(--primary)', fontWeight: 600 }}
+                style={{ fontSize: '0.825rem', color: 'var(--primary)', fontWeight: 700 }}
               >
                 Quên mật khẩu?
               </Link>
@@ -110,7 +113,7 @@ export const LoginPage = () => {
                 placeholder="Nhập mật khẩu..."
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                style={{ paddingRight: '44px' }}
+                style={{ paddingRight: '48px' }}
                 required
               />
               <button
@@ -118,7 +121,7 @@ export const LoginPage = () => {
                 onClick={() => setShowPassword(!showPassword)}
                 style={{
                   position: 'absolute',
-                  right: '12px',
+                  right: '14px',
                   top: '50%',
                   transform: 'translateY(-50%)',
                   color: 'var(--text-subtle)',
@@ -134,18 +137,18 @@ export const LoginPage = () => {
           <button
             type="submit"
             className="btn btn-primary"
-            style={{ width: '100%', padding: '14px', borderRadius: 'var(--radius-md)', fontSize: '1rem', marginTop: '14px' }}
+            style={{ width: '100%', padding: '14px', borderRadius: 'var(--radius-full)', fontSize: '1rem', marginTop: '16px', fontWeight: 800 }}
             disabled={loading}
           >
-            <LogIn size={18} /> {loading ? 'Đang xác thực...' : 'Đăng Nhập'}
+            <LogIn size={18} /> {loading ? 'Đang xác thực...' : 'Đăng Nhập Ngay'}
           </button>
         </form>
 
         {/* Footer Link */}
-        <div style={{ textAlign: 'center', marginTop: '28px', borderTop: '1px solid var(--border-subtle)', paddingTop: '20px' }}>
+        <div style={{ textAlign: 'center', marginTop: '30px', borderTop: '1px solid var(--border-subtle)', paddingTop: '22px' }}>
           <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-            Chưa có tài khoản?{' '}
-            <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 700 }}>
+            Chưa có tài khoản EduExam?{' '}
+            <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 800 }}>
               Đăng ký ngay <ArrowRight size={14} />
             </Link>
           </p>
