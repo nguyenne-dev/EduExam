@@ -21,7 +21,9 @@ import {
   HelpCircle,
   Sparkles,
   ChevronRight,
-  ListOrdered
+  ListOrdered,
+  Maximize2,
+  Minimize2
 } from 'lucide-react';
 
 export const QuizPage = () => {
@@ -41,6 +43,7 @@ export const QuizPage = () => {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [focusMode, setFocusMode] = useState(false);
 
   // Fetch topic & questions
   useEffect(() => {
@@ -251,25 +254,54 @@ export const QuizPage = () => {
           </div>
         </div>
 
-        {/* Timer & Submit CTA */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          {/* Animated Timer Pill */}
+        {/* Timer, Focus Mode & Submit CTA */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {/* Zen Focus Mode Toggle */}
+          <button
+            onClick={() => setFocusMode(!focusMode)}
+            className={`btn btn-sm ${focusMode ? 'btn-primary' : 'btn-secondary'}`}
+            style={{ borderRadius: 'var(--radius-full)', padding: '8px 14px', fontSize: '0.825rem' }}
+            title={focusMode ? "Tắt chế độ tập trung" : "Bật chế độ tập trung (Zen Focus Mode)"}
+          >
+            {focusMode ? <Minimize2 size={15} /> : <Maximize2 size={15} />}
+            <span className="desktop-nav">{focusMode ? 'Thu nhỏ' : 'Chế độ tập trung'}</span>
+          </button>
+
+          {/* SVG Circular Timer Ring */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '8px',
-              padding: '8px 18px',
+              gap: '10px',
+              padding: '6px 16px',
               borderRadius: 'var(--radius-full)',
               backgroundColor: 'var(--bg-subtle)',
               border: '1px solid var(--border-subtle)',
               fontWeight: 800,
-              fontSize: '1.05rem',
+              fontSize: '1rem',
               color: 'var(--primary)',
               boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
             }}
           >
-            <Clock size={18} className="animate-spin" style={{ animationDuration: '6s' }} />
+            <div style={{ position: 'relative', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg width="24" height="24" viewBox="0 0 36 36">
+                <path
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  fill="none"
+                  stroke="var(--border-subtle)"
+                  strokeWidth="3.5"
+                />
+                <path
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  fill="none"
+                  stroke="var(--primary)"
+                  strokeWidth="3.5"
+                  strokeDasharray={`${Math.min(100, ((elapsedSeconds % 60) / 60) * 100)}, 100`}
+                  strokeLinecap="round"
+                />
+              </svg>
+              <Clock size={11} color="var(--primary)" style={{ position: 'absolute' }} />
+            </div>
             <span>{formatTime(elapsedSeconds)}</span>
           </div>
 
@@ -278,7 +310,7 @@ export const QuizPage = () => {
             onClick={() => setShowSubmitModal(true)}
             className={`btn ${unansweredCount === 0 ? 'btn-primary' : 'btn-secondary'}`}
             style={{
-              padding: '10px 24px',
+              padding: '10px 22px',
               borderRadius: 'var(--radius-full)',
               fontWeight: 700,
               fontSize: '0.925rem'

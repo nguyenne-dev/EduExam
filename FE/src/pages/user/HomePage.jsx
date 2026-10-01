@@ -19,6 +19,7 @@ import {
   LayoutDashboard,
   CheckSquare
 } from 'lucide-react';
+import EduExamLogo from '../../components/common/EduExamLogo';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 export const HomePage = () => {
@@ -86,7 +87,7 @@ export const HomePage = () => {
             </h1>
 
             <p style={{ fontSize: '1.15rem', color: 'var(--text-muted)', lineHeight: 1.75, marginBottom: '36px', maxWidth: '540px' }}>
-              Trải nghiệm khảo thí trắc nghiệm chuẩn EdTech: giao diện tactile bấm sướng tay, đồng hồ đếm ngược trực quan, phím tắt tốc độ cao và bảng phân tích điểm tức thì.
+              Trải nghiệm khảo thí trắc nghiệm chuẩn EdTech: giao diện tương tác ổn định không giật nảy, đồng hồ đếm ngược trực quan, phím tắt tốc độ cao và bảng phân tích điểm tức thì.
             </p>
 
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
@@ -112,10 +113,10 @@ export const HomePage = () => {
             </div>
           </div>
 
-          {/* Hero Visual Card: Interactive Live Micro-Challenge */}
+          {/* Hero Visual Card: Interactive Live Micro-Challenge (ZERO BOUNCE) */}
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <div
-              className="glass-card animate-float"
+              className="bento-card"
               style={{
                 width: '100%',
                 maxWidth: '500px',
@@ -130,22 +131,10 @@ export const HomePage = () => {
               {/* Header inside hero card */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                  <div style={{
-                    width: '46px',
-                    height: '46px',
-                    borderRadius: '14px',
-                    background: 'var(--primary-gradient)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 8px 20px rgba(99, 102, 241, 0.45)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)'
-                  }}>
-                    <Brain size={24} color="#fff" />
-                  </div>
+                  <EduExamLogo size={42} showText={false} />
                   <div>
-                    <h3 style={{ fontSize: '1.15rem', fontWeight: 800 }}>Thử Thách Nhanh</h3>
-                    <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Chạm để trải nghiệm phản hồi tactile</p>
+                    <h3 style={{ fontSize: '1.15rem', fontWeight: 800 }}>Thử Thách Trực Quan</h3>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Phản hồi ánh sáng mượt mà tức thì</p>
                   </div>
                 </div>
                 <span className="badge badge-success">
