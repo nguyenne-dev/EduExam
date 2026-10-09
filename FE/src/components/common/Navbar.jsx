@@ -69,7 +69,7 @@ export const Navbar = () => {
     fontSize: '0.9rem',
     color: isActive ? 'var(--primary)' : 'var(--text-muted)',
     backgroundColor: isActive ? 'var(--primary-light)' : 'transparent',
-    border: isActive ? '1px solid rgba(99, 102, 241, 0.25)' : '1px solid transparent',
+    border: isActive ? '1px solid var(--border-hover)' : '1px solid transparent',
     transition: 'all var(--transition-fast)',
     display: 'inline-flex',
     alignItems: 'center',
@@ -130,25 +130,25 @@ export const Navbar = () => {
           }}
         >
           <NavLink to="/" style={navLinkStyle} className="nav-link-item" title="Trang chủ">
-            <Home size={19} />
+            <Home size={19} className="nav-link-icon" />
             <span className="nav-link-text">Trang chủ</span>
           </NavLink>
           <NavLink to="/topics" style={navLinkStyle} className="nav-link-item" title="Chủ đề trắc nghiệm">
-            <BookOpen size={19} />
+            <BookOpen size={19} className="nav-link-icon" />
             <span className="nav-link-text">Chủ đề</span>
           </NavLink>
           {isAuthenticated && (
             <NavLink to="/submissions" style={navLinkStyle} className="nav-link-item" title="Lịch sử làm bài">
-              <History size={19} />
+              <History size={19} className="nav-link-icon" />
               <span className="nav-link-text">Lịch sử thi</span>
             </NavLink>
           )}
           <NavLink to="/about" style={navLinkStyle} className="nav-link-item" title="Giới thiệu EduExam">
-            <Info size={19} />
+            <Info size={19} className="nav-link-icon" />
             <span className="nav-link-text">Giới thiệu</span>
           </NavLink>
           <NavLink to="/contact" style={navLinkStyle} className="nav-link-item" title="Liên hệ góp ý">
-            <PhoneCall size={19} />
+            <PhoneCall size={19} className="nav-link-icon" />
             <span className="nav-link-text">Liên hệ</span>
           </NavLink>
         </nav>
@@ -196,9 +196,9 @@ export const Navbar = () => {
               to="/admin"
               className="btn btn-sm nav-admin-badge"
               style={{
-                background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%)',
+                background: 'var(--primary-light)',
                 color: 'var(--primary)',
-                border: '1px solid rgba(99, 102, 241, 0.35)',
+                border: '1px solid var(--border-hover)',
                 fontWeight: 700,
                 borderRadius: 'var(--radius-full)',
                 display: 'inline-flex',
@@ -247,7 +247,7 @@ export const Navbar = () => {
                     justifyContent: 'center',
                     fontWeight: 800,
                     fontSize: '0.92rem',
-                    boxShadow: '0 2px 8px rgba(99, 102, 241, 0.35)',
+                    boxShadow: 'var(--shadow-sm)',
                     flexShrink: 0
                   }}
                 >

@@ -172,7 +172,7 @@ export const ResultPage = () => {
           alignItems: 'center',
           justifyContent: 'center',
           marginBottom: '20px',
-          boxShadow: '0 8px 24px rgba(99, 102, 241, 0.4)'
+          boxShadow: 'var(--shadow-glow), 0 8px 24px rgba(0,0,0,0.1)'
         }}>
           <Trophy size={32} />
         </div>

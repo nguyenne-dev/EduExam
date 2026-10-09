@@ -80,8 +80,8 @@ export const AdminDashboardPage = () => {
         className="bento-card"
         style={{
           padding: '32px 36px',
-          background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.18) 0%, rgba(139, 92, 246, 0.18) 50%, rgba(236, 72, 153, 0.12) 100%)',
-          border: '1px solid rgba(99, 102, 241, 0.35)',
+          background: 'linear-gradient(135deg, var(--primary-light) 0%, rgba(225, 27, 34, 0.04) 100%)',
+          border: '1px solid var(--border-hover)',
           borderRadius: 'var(--radius-2xl)',
           display: 'flex',
           alignItems: 'center',
@@ -92,7 +92,7 @@ export const AdminDashboardPage = () => {
         }}
       >
         <div>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '4px 12px', borderRadius: 'var(--radius-full)', backgroundColor: 'var(--primary-light)', color: 'var(--primary)', fontWeight: 800, fontSize: '0.75rem', marginBottom: '12px', border: '1px solid rgba(99, 102, 241, 0.3)' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '4px 12px', borderRadius: 'var(--radius-full)', backgroundColor: 'var(--primary-light)', color: 'var(--primary)', fontWeight: 800, fontSize: '0.75rem', marginBottom: '12px', border: '1px solid var(--border-hover)' }}>
             <Sparkles size={14} /> LIVE COMMAND CENTER
           </div>
           <h1 style={{ fontSize: '2.1rem', fontWeight: 900, marginBottom: '6px', letterSpacing: '-0.03em' }}>

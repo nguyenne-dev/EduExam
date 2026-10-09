@@ -197,7 +197,7 @@ export const ForgotPasswordPage = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   marginBottom: '20px',
-                  border: '1px solid rgba(99, 102, 241, 0.2)',
+                  border: '1px solid var(--border-hover)',
                 }}
               >
                 <Send size={32} />

@@ -23,7 +23,8 @@ import {
   ChevronRight,
   ListOrdered,
   Maximize2,
-  Minimize2
+  Minimize2,
+  Bold
 } from 'lucide-react';
 
 export const QuizPage = () => {
@@ -106,9 +107,42 @@ export const QuizPage = () => {
     }));
   }, [currentIndex, questions]);
 
-  // Keyboard navigation support: A/B/C/D or 1/2/3/4, Arrows, F for flag
+  // Fullscreen & Zen Focus Mode handler
+  const toggleFocusMode = () => {
+    if (!focusMode) {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+      setFocusMode(true);
+      addToast('Đã bật Chế độ tập trung (Zen Focus Mode)', 'info');
+    } else {
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+      setFocusMode(false);
+    }
+  };
+
+  // Exit focus mode if user presses ESC or exits browser fullscreen
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement && focusMode) {
+        setFocusMode(false);
+      }
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, [focusMode]);
+
+  // Keyboard navigation support: A/B/C/D or 1/2/3/4, Arrows, F for flag (with scroll prevention)
   useEffect(() => {
     const handleKeyDown = (e) => {
+      // Exit focus mode on Escape
+      if (e.key === 'Escape' && focusMode) {
+        toggleFocusMode();
+        return;
+      }
+
       // Don't trigger if modal is open or user is typing in an input
       if (showSubmitModal || ['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
 
@@ -120,9 +154,13 @@ export const QuizPage = () => {
       else if (e.key === '3') handleSelectAnswer('C');
       else if (e.key === '4') handleSelectAnswer('D');
       else if (e.key === 'ArrowRight') {
+        e.preventDefault();
         setCurrentIndex((prev) => Math.min(questions.length - 1, prev + 1));
       } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
         setCurrentIndex((prev) => Math.max(0, prev - 1));
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        e.preventDefault();
       } else if (key === 'F') {
         toggleFlagQuestion();
       }
@@ -130,7 +168,7 @@ export const QuizPage = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleSelectAnswer, toggleFlagQuestion, questions.length, showSubmitModal]);
+  }, [handleSelectAnswer, toggleFlagQuestion, questions.length, showSubmitModal, focusMode]);
 
   const answeredCount = Object.keys(selectedAnswers).length;
   const totalQuestions = questions.length;
@@ -209,7 +247,25 @@ export const QuizPage = () => {
   const isFlagged = currentQuestion ? !!flaggedQuestions[currentQuestion._id] : false;
 
   return (
-    <div className="container" style={{ paddingBottom: '70px', paddingTop: '24px' }}>
+    <div
+      className={focusMode ? 'quiz-focus-overlay' : 'container'}
+      style={focusMode ? {
+        position: 'fixed',
+        inset: 0,
+        zIndex: 9999,
+        backgroundColor: 'var(--bg-main)',
+        overflowY: 'auto',
+        padding: '24px 32px 70px 32px',
+        margin: 0,
+        maxWidth: '100%',
+        width: '100vw',
+        minHeight: '100vh',
+        boxSizing: 'border-box'
+      } : {
+        paddingBottom: '70px',
+        paddingTop: '24px'
+      }}
+    >
       
       {/* 1. Header Bar: Topic Name, Live Timer, Progress Indicator, Submit Action */}
       <div
@@ -235,6 +291,11 @@ export const QuizPage = () => {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span className="badge badge-primary" style={{ fontSize: '0.7rem' }}>BÀI THI CHÍNH THỨC</span>
+              {focusMode && (
+                <span className="badge" style={{ backgroundColor: 'var(--bg-subtle)', color: 'var(--primary)', border: '1px solid var(--border-hover)', fontSize: '0.7rem' }}>
+                  ZEN FOCUS MODE
+                </span>
+              )}
               <h2 style={{ fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
                 {topic?.title || 'Bài thi trắc nghiệm'}
               </h2>
@@ -258,33 +319,38 @@ export const QuizPage = () => {
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           {/* Zen Focus Mode Toggle */}
           <button
-            onClick={() => setFocusMode(!focusMode)}
+            onClick={toggleFocusMode}
             className={`btn btn-sm ${focusMode ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ borderRadius: 'var(--radius-full)', padding: '8px 14px', fontSize: '0.825rem' }}
-            title={focusMode ? "Tắt chế độ tập trung" : "Bật chế độ tập trung (Zen Focus Mode)"}
+            style={{ borderRadius: 'var(--radius-full)', padding: '8px 16px', fontSize: '0.85rem', gap: '6px' }}
+            title={focusMode ? "Tắt chế độ tập trung (ESC)" : "Bật chế độ tập trung toàn màn hình"}
           >
             {focusMode ? <Minimize2 size={15} /> : <Maximize2 size={15} />}
-            <span className="desktop-nav">{focusMode ? 'Thu nhỏ' : 'Chế độ tập trung'}</span>
+            <span>{focusMode ? 'Thoát tập trung' : 'Chế độ tập trung'}</span>
           </button>
 
-          {/* SVG Circular Timer Ring */}
+          {/* SVG Circular Timer Ring - Fixed stable dimensions, no layout jitter */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '10px',
-              padding: '6px 16px',
+              justifyContent: 'center',
+              gap: '8px',
+              padding: '6px 14px',
               borderRadius: 'var(--radius-full)',
               backgroundColor: 'var(--bg-subtle)',
               border: '1px solid var(--border-subtle)',
               fontWeight: 800,
               fontSize: '1rem',
               color: 'var(--primary)',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
+              boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+              minWidth: '112px',
+              width: '112px',
+              flexShrink: 0,
+              userSelect: 'none'
             }}
           >
-            <div style={{ position: 'relative', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <svg width="24" height="24" viewBox="0 0 36 36">
+            <div style={{ position: 'relative', width: '22px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <svg width="22" height="22" viewBox="0 0 36 36">
                 <path
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                   fill="none"
@@ -302,7 +368,19 @@ export const QuizPage = () => {
               </svg>
               <Clock size={11} color="var(--primary)" style={{ position: 'absolute' }} />
             </div>
-            <span>{formatTime(elapsedSeconds)}</span>
+            <span
+              style={{
+                fontWeight: "bold",
+                fontVariantNumeric: 'tabular-nums',
+                fontFeatureSettings: '"tnum"',
+                letterSpacing: '0.02em',
+                display: 'inline-block',
+                minWidth: '46px',
+                textAlign: 'center'
+              }}
+            >
+              {formatTime(elapsedSeconds)}
+            </span>
           </div>
 
           {/* Submit Button */}
@@ -341,7 +419,7 @@ export const QuizPage = () => {
             background: 'var(--primary-gradient)',
             borderRadius: 'var(--radius-full)',
             transition: 'width 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-            boxShadow: '0 0 10px rgba(99, 102, 241, 0.5)'
+            boxShadow: 'var(--shadow-glow)'
           }}
         />
       </div>
@@ -374,8 +452,36 @@ export const QuizPage = () => {
           {/* Top Bar of Question: Question # and Flag action */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '18px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <span className="badge badge-primary" style={{ fontSize: '0.85rem', padding: '6px 16px' }}>
-                CÂU HỎI {currentIndex + 1} / {totalQuestions}
+              <span
+                className="badge badge-primary"
+                style={{
+                  fontSize: '0.85rem',
+                  fontWeight: 800,
+                  padding: '6px 16px',
+                  minWidth: '158px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px',
+                  flexShrink: 0,
+                  userSelect: 'none',
+                  letterSpacing: '0.03em'
+                }}
+              >
+                <span style={{ fontWeight: 800 }}>CÂU HỎI</span>
+                <span
+                  style={{
+                    fontWeight: 800,
+                    fontVariantNumeric: 'tabular-nums',
+                    fontFeatureSettings: '"tnum"',
+                    letterSpacing: '0.02em',
+                    display: 'inline-block',
+                    minWidth: '48px',
+                    textAlign: 'center'
+                  }}
+                >
+                  {currentIndex + 1} / {totalQuestions}
+                </span>
               </span>
               <span style={{ fontSize: '0.825rem', color: 'var(--text-subtle)' }}>
                 (Dùng phím <span className="kbd-key">A</span> <span className="kbd-key">B</span> <span className="kbd-key">C</span> <span className="kbd-key">D</span>)
@@ -439,7 +545,7 @@ export const QuizPage = () => {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      boxShadow: '0 2px 8px rgba(99, 102, 241, 0.45)'
+                      boxShadow: 'var(--shadow-sm)'
                     }}>
                       <Check size={16} />
                     </div>
@@ -455,18 +561,18 @@ export const QuizPage = () => {
               onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
               disabled={currentIndex === 0}
               className="btn btn-secondary"
-              style={{ borderRadius: 'var(--radius-full)', padding: '10px 20px' }}
+              style={{ borderRadius: 'var(--radius-full)', padding: '10px 22px' }}
             >
-              <ArrowLeft size={16} /> <span className="kbd-key">←</span> Câu trước
+              <ArrowLeft size={16} /> Câu trước
             </button>
 
             {currentIndex < totalQuestions - 1 ? (
               <button
                 onClick={() => setCurrentIndex((prev) => Math.min(totalQuestions - 1, prev + 1))}
                 className="btn btn-primary"
-                style={{ borderRadius: 'var(--radius-full)', padding: '10px 22px' }}
+                style={{ borderRadius: 'var(--radius-full)', padding: '10px 24px' }}
               >
-                Câu tiếp theo <span className="kbd-key" style={{ color: '#000', backgroundColor: '#fff' }}>→</span> <ArrowRight size={16} />
+                Câu tiếp theo <ArrowRight size={16} />
               </button>
             ) : (
               <button
@@ -501,7 +607,7 @@ export const QuizPage = () => {
               <ListOrdered size={18} color="var(--primary)" />
               <h4 style={{ fontSize: '1.05rem', fontWeight: 800 }}>Ma Trận Đề Thi</h4>
             </div>
-            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)' }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)', fontVariantNumeric: 'tabular-nums', fontFeatureSettings: '"tnum"', letterSpacing: '0.02em' }}>
               {answeredCount}/{totalQuestions}
             </span>
           </div>
@@ -551,7 +657,7 @@ export const QuizPage = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     position: 'relative',
-                    boxShadow: isCurrent ? '0 0 0 3px var(--primary), 0 2px 8px rgba(99, 102, 241, 0.35)' : 'none',
+                    boxShadow: isCurrent ? '0 0 0 3px var(--primary), var(--shadow-glow)' : 'none',
                     transition: 'all var(--transition-fast)',
                     transform: isCurrent ? 'scale(1.05)' : 'scale(1)',
                     zIndex: isCurrent ? 2 : 1

@@ -7,9 +7,6 @@ export const EduExamLogo = ({
   className = '',
   textClassName = ''
 }) => {
-  const iconRadius = Math.round(size * 0.28);
-  const iconPadding = Math.round(size * 0.18);
-
   return (
     <div
       className={`eduexam-brand ${className}`}
@@ -21,69 +18,100 @@ export const EduExamLogo = ({
         flexShrink: 0
       }}
     >
-      {/* Proprietary Geometric Emblem */}
+      {/* Brand Squircle Emblem */}
       <div
         className="eduexam-emblem"
         style={{
           width: `${size}px`,
           height: `${size}px`,
-          borderRadius: `${iconRadius}px`,
-          background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #06b6d4 100%)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          boxShadow: '0 4px 16px rgba(99, 102, 241, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35)',
-          border: '1px solid rgba(255, 255, 255, 0.22)',
           flexShrink: 0,
-          position: 'relative',
-          overflow: 'hidden'
+          filter: 'drop-shadow(0 4px 14px rgba(225, 27, 34, 0.28))'
         }}
       >
-        {/* Subtle Ambient Sheen Glass Overlay */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, transparent 60%)',
-            pointerEvents: 'none'
-          }}
-        />
-
-        {/* Crisp Modern Vector: Dynamic Geometric 'E' */}
         <svg
-          width={Math.round(size * 0.64)}
-          height={Math.round(size * 0.64)}
-          viewBox="0 0 28 28"
+          width={size}
+          height={size}
+          viewBox="0 0 48 48"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          style={{ position: 'relative', zIndex: 1 }}
+          style={{ width: '100%', height: '100%', display: 'block' }}
         >
-          {/* Top Dynamic Bar with Arrow Angle */}
-          <path
-            d="M5 6.5C5 5.67 5.67 5 6.5 5H21.5C22.18 5 22.61 5.68 22.34 6.31L20.2 11.31C20.03 11.72 19.64 12 19.2 12H10.5C9.67 12 9 11.33 9 10.5V6.5"
-            fill="#ffffff"
-            fillOpacity="0.96"
-          />
+          <defs>
+            <linearGradient id="eduShieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#E11B22" />
+              <stop offset="55%" stopColor="#C51622" />
+              <stop offset="100%" stopColor="#8B0000" />
+            </linearGradient>
+            <linearGradient id="eduShieldSheen" x1="50%" y1="0%" x2="50%" y2="100%">
+              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.22" />
+              <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
+            </linearGradient>
+            <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#10B981" />
+              <stop offset="100%" stopColor="#059669" />
+            </linearGradient>
+          </defs>
 
-          {/* Center Precision Horizon Stem of 'E' */}
+          {/* User requested squircle base */}
+          <rect x="3" y="3" width="42" height="42" rx="11" fill="url(#eduShieldGrad)"></rect>
+          <rect x="3" y="3" width="42" height="42" rx="11" fill="url(#eduShieldSheen)"></rect>
           <rect
-            x="5"
-            y="12"
-            width="12"
-            height="4"
-            rx="2"
-            fill="#ffffff"
-            fillOpacity="0.92"
+            x="3.5"
+            y="3.5"
+            width="41"
+            height="41"
+            rx="10.5"
+            stroke="rgba(255, 255, 255, 0.22)"
+            strokeWidth="1"
+            fill="none"
+          ></rect>
+
+          {/* Graduation Cap Cylinder (Base & 3D Depth) */}
+          <path
+            d="M17 22.5V26.8C17 29.8 20.1 32 24 32C27.9 32 31 29.8 31 26.8V22.5"
+            fill="#DDE5ED"
+          />
+          <path
+            d="M17 24.5V26.8C17 29.8 20.1 32 24 32C27.9 32 31 29.8 31 26.8V24.5C28.2 26 25 26.5 24 26.5C23 26.5 19.8 26 17 24.5Z"
+            fill="#CAD6E2"
           />
 
-          {/* Bottom Ascension Foundation */}
+          {/* Graduation Cap Top Diamond (Mortarboard Lid) */}
           <path
-            d="M9 17.5C9 16.67 9.67 16 10.5 16H20.5C21.42 16 22.02 16.92 21.68 17.77L19.28 23.77C19.04 24.38 18.45 24.78 17.8 24.78H6.5C5.67 24.78 5 24.11 5 23.28V17.5"
-            fill="#ffffff"
-            fillOpacity="0.96"
+            d="M24 13.5L35.5 19.2L24 25L12.5 19.2L24 13.5Z"
+            fill="#FFFFFF"
+          />
+          {/* Lid 3D Edge */}
+          <path
+            d="M12.5 19.2L24 25L35.5 19.2V20.4L24 26.2L12.5 20.4V19.2Z"
+            fill="#E2E8F0"
+          />
+
+          {/* Cap Center Button and Tassel Cord */}
+          <ellipse cx="24" cy="19.2" rx="1.3" ry="0.9" fill="#CAD6E2" />
+          <path
+            d="M24 19.5C20.5 20.5 16.5 21.5 15.2 23.5V27.5"
+            stroke="#CAD6E2"
+            strokeWidth="1.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+          />
+          <circle cx="15.2" cy="27.8" r="1" fill="#CAD6E2" />
+
+          {/* Verification Checkmark Badge (White outer ring + Green pill + White checkmark) */}
+          <circle cx="31.5" cy="29" r="6.8" fill="#FFFFFF" />
+          <circle cx="31.5" cy="29" r="5.5" fill="url(#badgeGrad)" />
+          <path
+            d="M29.2 28.8L30.8 30.5L34 27.2"
+            stroke="#FFFFFF"
+            strokeWidth="1.7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
           />
         </svg>
       </div>
@@ -124,7 +152,7 @@ export const EduExamLogo = ({
               Edu
               <span
                 style={{
-                  background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%)',
+                  background: 'linear-gradient(135deg, #e11b22 0%, #c51622 50%, #8b0000 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   display: 'inline-block',

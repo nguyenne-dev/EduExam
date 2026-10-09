@@ -87,7 +87,7 @@ export const ProfilePage = () => {
             justifyContent: 'center',
             fontSize: '2rem',
             fontWeight: 800,
-            boxShadow: '0 8px 24px rgba(99, 102, 241, 0.4)',
+            boxShadow: 'var(--shadow-glow), 0 4px 16px rgba(0,0,0,0.1)',
             marginBottom: '16px'
           }}
         >

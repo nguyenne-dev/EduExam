@@ -27,7 +27,7 @@ export const LoadingSpinner = ({ size = 'medium', message = 'Đang tải...' }) 
           border: `${currentSize.borderWidth} solid var(--border-card)`,
           borderTopColor: 'var(--primary)',
           borderRadius: '50%',
-          boxShadow: '0 0 15px rgba(99, 102, 241, 0.3)'
+          boxShadow: 'var(--shadow-glow)'
         }}
       />
       {message && (

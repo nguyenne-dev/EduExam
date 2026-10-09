@@ -77,8 +77,8 @@ export const HomePage = () => {
                 fontWeight: 700,
                 fontSize: '0.825rem',
                 marginBottom: '26px',
-                border: '1px solid rgba(99, 102, 241, 0.3)',
-                boxShadow: '0 2px 10px rgba(99, 102, 241, 0.15)'
+                border: '1px solid var(--border-hover)',
+                boxShadow: 'var(--shadow-sm)'
               }}
             >
               <Sparkles size={15} /> NỀN TẢNG KHẢO THÍ THẾ HỆ MỚI • 2026 EDITION
@@ -543,11 +543,11 @@ export const HomePage = () => {
           className="bento-card"
           style={{
             padding: '70px 40px',
-            background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #6366f1 100%)',
+            background: 'var(--primary-gradient)',
             color: '#fff',
             borderRadius: 'var(--radius-2xl)',
             textAlign: 'center',
-            boxShadow: '0 20px 50px rgba(99, 102, 241, 0.45)',
+            boxShadow: 'var(--shadow-lg), var(--shadow-glow)',
             position: 'relative',
             overflow: 'hidden',
             border: '1px solid rgba(255, 255, 255, 0.2)'

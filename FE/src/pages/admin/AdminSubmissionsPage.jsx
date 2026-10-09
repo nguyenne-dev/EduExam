@@ -255,8 +255,8 @@ export const AdminSubmissionsPage = () => {
         className="glass-card"
         style={{
           padding: '24px 28px',
-          background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(236, 72, 153, 0.12) 100%)',
-          border: '1px solid rgba(99, 102, 241, 0.3)',
+          background: 'linear-gradient(135deg, var(--primary-light) 0%, rgba(225, 27, 34, 0.04) 100%)',
+          border: '1px solid var(--border-hover)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -375,7 +375,7 @@ export const AdminSubmissionsPage = () => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {[
                 { label: '81% - 100% (Xuất sắc)', count: stats.scoreBrackets?.bracket81_100 || 0, color: '#10b981' },
-                { label: '61% - 80% (Khá)', count: stats.scoreBrackets?.bracket61_80 || 0, color: '#6366f1' },
+                { label: '61% - 80% (Khá)', count: stats.scoreBrackets?.bracket61_80 || 0, color: '#e11b22' },
                 { label: '41% - 60% (Trung bình)', count: stats.scoreBrackets?.bracket41_60 || 0, color: '#f59e0b' },
                 { label: '21% - 40% (Yếu)', count: stats.scoreBrackets?.bracket21_40 || 0, color: '#f97316' },
                 { label: '0% - 20% (Kém)', count: stats.scoreBrackets?.bracket0_20 || 0, color: '#ef4444' },
